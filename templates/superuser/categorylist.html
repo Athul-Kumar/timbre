@@ -1,0 +1,95 @@
+{% extends 'superuser/adminbase.html' %}
+
+{% block categoryclass %}
+text-light
+{% endblock %}
+
+{% block tablecontent %} 
+categories
+{% endblock %}
+
+
+{% block maincontent %}
+
+{% for message in messages %}
+   <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+    <strong>Message: </strong> {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>  
+  {%endfor%}
+
+
+
+<div class="mx-auto mb-5" style="width: 400px;">
+  <a href="{% url 'category-add' %}" class="btn btn-info btn-rounded btn-floating ">Add category</a>
+
+</div>
+ 
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="text-light">S.No</th>
+        <th scope="col" class="text-light">Items</th>
+        <th scope="col" class="text-light">Image</th>
+        <th scope="col" class="text-light">Availability</th>
+        <th scope="col" class="text-light">Update</th>
+      </tr>
+    </thead>
+    <tbody>
+    
+        {% for category in categorylist %}
+      <tr>
+        <th scope="row" class="text-light">{{category.id}}</th>
+        <td class="text-light">{{category.category_name}}</td>
+         <td class="text-light"><img src='{{category.cat_image.url}}' height='100px'></td>
+          {% if category.is_available == True %}
+         <td class="text-light">In stock</td> 
+         {% else %}
+         <td class="text-light">Out of Stock</td> 
+         {% endif %}
+        
+        <td class="text-light">
+            <form action="{% url 'category_delete' id=category.id %}" method="POST">
+                {% csrf_token%}
+
+                <button type="submit" class="btn btn-danger btn-rounded">Delete</button>
+            </form>
+        </td> 
+      </tr>
+        
+        {% endfor%}
+      </tr>
+      
+    </tbody>
+  </table>
+
+  
+  <!-- pagination -->
+  <br><br>
+  <!-- {{userlist}}<br>
+  Has Previous: {{userlist.has_previous}}<br>
+  Has Next: {{userlist.has_next}}<br>
+  Current Page : {{userlist.number}}<br>
+  Number of pages: {{userlist.paginator.num_pages}}<br>
+  <hr><br><br> -->
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+  
+  {% if categorylist.has_previous %}
+      <li class="page-item"><a class="page-link btn-danger"  href="?page=1">&laquo First</a></li>
+      <li class="page-item"><a class="page-link btn-danger"  href="?page={{ categorylist.previous_page_number }}"> previous</a></li>
+  {%endif%}
+   <li class="page-item disabled"><a href="#" class="page-link badge-danger" > Page {{categorylist.number}} of {{categorylist.paginator.num_pages}}</a></li>
+  {% if categorylist.has_next %}
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{categorylist.next_page_number}}">Next</a></li>
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{categorylist.paginatior.num_pages }}">Last &raquo</a></li>
+  {% endif%}
+
+  </ul>
+</nav>
+
+{% endblock %}

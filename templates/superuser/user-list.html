@@ -1,0 +1,77 @@
+{% extends 'superuser/adminbase.html' %}
+{% comment %} {% load static %} {% endcomment %}
+
+
+{% block title %}
+users
+{% endblock%}
+
+{% block usersclass %}
+text-light
+
+{% endblock %}
+
+{% block tablecontent %}
+userlist
+
+{% endblock %}
+
+{% block maincontent %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col" class="text-light">First Name</th>
+      <th scope="col" class="text-light">Last Name</th>
+      <th scope="col" class="text-light">Email</th>
+      <th scope="col" class="text-light">Mobile</th>
+      <th scope="col" class="text-light">Status</th>
+      <th scope="col" class="text-light">Last Seen</th>
+      <th scope="col" class="text-light">Block/Unblock</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <th scope="row" class="text-primary">{{ user.first_name}}</th>
+      <td class="text-primary">{{ user.last_name }}</td>
+      <td class="text-primary">{{ user.email}}</td>
+      <td class="text-primary">{{user.mobile}}</td>
+      <td class="text-primary">{{user.is_active}}</td>
+      <td class="text-primary">{{user.last_login }}</td>
+    <td>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{user.id}}">
+        Launch demo modal
+      </button>
+    </td>
+    </tr>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal{{user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {{user.last_name}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%endfor%}
+  </tbody>
+</table>
+
+  {% endblock %}
+
+
+
+
+
+

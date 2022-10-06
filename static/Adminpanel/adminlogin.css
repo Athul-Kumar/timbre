@@ -1,0 +1,12 @@
+form-control:valid {
+    background-color: #fbf8f8!important;
+  }
+
+  input:not(:placeholder-shown) {
+    background-color:  #f1f5f7!important;
+ } 
+   
+
+ input:placeholder-shown {
+    background-color:  #f8f7f7!important;
+ }    

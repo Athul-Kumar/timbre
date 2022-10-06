@@ -1,0 +1,40 @@
+{% comment %} {% extends 'superuser/adminbase.html' %}
+
+{% load widget_tweaks %}
+
+
+
+{% block tablecontent %} 
+Add Specifications
+{% endblock %}
+
+
+{% block maincontent %}
+        
+<div class="card w-75 mx-auto">
+    <div class="card-body shadow-sm">
+    
+        <form action="" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <div class="form-group">    
+                <label for="">Product ID</label>
+                {% render_field form.product_id placeholder="product id" class="form-control" id="product_id"   %}
+            </div>
+
+            <div class="form-group">
+                <label for="">Spec Title</label>
+                {% render_field form.spec_title placeholder="Spec Name" class="form-control"   %}
+            </div>
+
+            <div class="form-group">
+                <label for="">spec Description</label>
+                {% render_field form.spec_description placeholder="spec Description" class="form-control" %}
+            </div>
+           
+            <button class="btn btn-success btn-rounded" type="submit">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+{%endblock%} {% endcomment %}

@@ -1,0 +1,54 @@
+{% extends 'superuser/adminbase.html' %}
+{% load widget_tweaks %}
+
+{% block categoryclass %}
+text-light
+{% endblock %}
+
+{% block tablecontent %} 
+
+    categories updation
+
+{% endblock %}
+
+
+{% block maincontent %}
+
+
+<div class="card w-75 mx-auto">
+    <div class="card-body shadow-sm">
+    
+        <form action="" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="">Category Name</label>
+                {% render_field form.category_name placeholder="Category Name" class="form-control text-light   " id="Category_name"  %}
+            </div>
+            <div class="form-group d-none">
+                <label for="">Slug name</label>
+                {% render_field form.slug placeholder="slug field" class="form-control" id="Slug" %}
+            </div>
+            <div class="form-group">
+                <label for="">description</label>
+                {% render_field form.description placeholder="description" class="form-control" id="description" %}
+            </div>
+            <div class="form-group">
+                <label for="">Image</label>
+                {% render_field form.cat_image placeholder="image" class="form-control" %}
+            </div>
+            
+             <div class="form-check">
+                
+               {% render_field form.is_available  type="checkbox" class="form group" %}
+                <label for="">
+                    Availability
+                </label>
+           </div> 
+            <button class="btn btn-success btn-rounded type="submit">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+
+{% endblock %}

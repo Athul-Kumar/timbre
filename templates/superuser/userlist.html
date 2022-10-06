@@ -1,0 +1,167 @@
+{% extends 'superuser/adminbase.html' %}
+
+{% block usersclass %} 
+text-light
+{% endblock %}
+
+{% block tablecontent %}
+userlist
+{% endblock %}
+
+
+{% block maincontent %}
+
+
+{% for message in messages %}
+   <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+    <strong>Message: </strong> {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>  
+  {%endfor%}
+
+
+
+
+
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="text-light">First name</th>
+        <th scope="col" class="text-light">Last name</th>
+        <th scope="col" class="text-light">Email</th>
+        <th scope="col" class="text-light">Mobile</th>
+        <th scope="col" class="text-light">Block/Unblock</th>
+          
+      </tr>
+    </thead>
+    <tbody>
+        {% for user in userlist %}
+      <tr>
+        <th scope="row" class="text-light">{{user.first_name}}</th>
+        <td class="text-light">{{user.last_name}}</td>
+        <td class="text-light">{{user.email}}</td>
+        <td class="text-light">{{user.mobile}}</td>
+          {% comment %} <td> 
+            <form action="{% url 'userblock'  id=user.id  %}" method="POST">
+                {%  csrf_token %}
+                <button type="submit" class="btn btn-danger btn-rounded">Block</button></td>
+            </form> 
+            
+        <td>
+            <form action="{% url 'userunblock'  id=user.id %}" method="POST">
+                {% csrf_token%}
+
+                <button type="submit" class="btn btn-success btn-rounded">Unblock</button>
+            </form>
+        </td>  {% endcomment %}
+
+        {%if user.is_active %}
+      <td>
+        <button type="button" class="btn btn-danger btn-rounded" data-bs-toggle="modal" data-bs-target="#exampleModal{{user.id}}">
+          Block
+        </button>
+      </td>
+      {% else %}
+      <td>
+        <button type="button" class="btn btn-success btn-rounded" data-bs-toggle="modal" data-bs-target="#xampleModal{{user.id}}">
+          Unblock
+        </button>
+      </td>
+      {% endif %}
+      </tr>
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal{{user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Do you want to BLock this user {{user.first_name}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <form action="{% url 'userblock' id=user.id flag=1 %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Update</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- unblock model -->
+
+        <!-- Modal -->
+      <div class="modal fade" id="xampleModal{{user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Do you want to Unblock this user {{user.first_name}}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <form action="{% url 'userblock' id=user.id flag=0 %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Update</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor%}
+    </tbody>
+  </table>
+
+
+  <!-- pagination -->
+  <br><br>
+  <!-- {{userlist}}<br>
+  Has Previous: {{userlist.has_previous}}<br>
+  Has Next: {{userlist.has_next}}<br>
+  Current Page : {{userlist.number}}<br>
+  Number of pages: {{userlist.paginator.num_pages}}<br>
+  <hr><br><br> -->
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    
+  
+  
+  {% if userlist.has_previous %}
+      <li class="page-item"><a class="page-link btn-danger"  href="?page=1">&laquo First</a></li>
+      <li class="page-item"><a class="page-link btn-danger"  href="?page={{ userlist.previous_page_number }}"> previous</a></li>
+  {%endif%}
+   <li class="page-item disabled"><a href="#" class="page-link badge-danger" > Page {{userlist.number}} of {{userlist.paginator.num_pages}}</a></li>
+  {% if userlist.has_next %}
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{userlist.next_page_number}}">Next</a></li>
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{userlist.paginatior.num_pages }}">Last &raquo</a></li>
+  {% endif%}
+
+  </ul>
+</nav>
+
+ {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

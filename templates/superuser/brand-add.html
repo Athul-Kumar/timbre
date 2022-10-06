@@ -1,0 +1,71 @@
+{% extends 'superuser/adminbase.html' %}
+{% load widget_tweaks %}
+
+{% block brandclass %}
+text-light
+{% endblock %}
+
+{% block tablecontent %} 
+    Brand updation
+{% endblock %}
+
+
+{% block maincontent %}
+
+
+
+<div class="card w-75 mx-auto">
+
+    <div class="card-body shadow-sm">
+
+        <form action="{% url 'brand-add' %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="">Brand Name</label>
+                    {% render_field form.brand_name placeholder="Brand Name" class="form-control" id="Brand_name"  %}
+                </div>
+                 <div class="form-group d-none">
+                    <label for="">Slug Name</label>
+                    {% render_field form.slug placeholder="Slug Name" class="form-control" id="Slug"  %}
+                </div>
+                 <div class="form-group">
+                    <label for="">Category ID</label>
+                    {% render_field form.category_id placeholder="Pategory ID" class="form-control" id="category_id"  %}
+                </div>
+                <div class="form-group">
+                    <label for="">Product ID</label>
+                    {% render_field form.product_id placeholder="Product ID" class="form-control" id="product_id"  %}
+                </div>
+                <div class="form-group">
+                    <label for="">Image</label>
+                    {% render_field form.brand_images placeholder="Image" class="form-control"  %}
+                </div>
+                <div class="form-group">
+                    <label for="">Brand Description</label>
+                    {% render_field form.description placeholder="Add description" class="form-control"   %}
+                </div>
+                <div class="form-group">
+                    <label for="">Total Product</label>
+                    {% render_field form.total_products placeholder="products" class="form-control"   %}
+                </div>
+                
+                <div class="form-check">
+                {% render_field form.is_available  type="checkbox" class="form group" %}
+                    <label for="">
+                        Availability
+                    </label>
+                </div> 
+
+                <button class="btn btn-success btn-rounded" type="submit">Submit</button>
+
+
+
+        </form>
+
+
+
+    </div>
+
+</div>
+{% endblock%}
