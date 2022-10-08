@@ -41,7 +41,7 @@ class Brandinfo(models.Model):
     brand_name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255, unique=True)
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE, related_name = 'productbrand')
     brand_images=models.ImageField(upload_to='photos/brands')
     description= models.TextField(max_length= 250, blank= True)
     total_products= models.IntegerField()

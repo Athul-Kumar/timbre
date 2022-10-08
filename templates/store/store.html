@@ -185,11 +185,11 @@ store Page
                                 <h4 class="product-price">{{items.product_max_price}}</h4>
                                 <p><a href="{{ items.get_absolute_url }}">{{items.product_name}}</a></p>
                                 <!-- Add to Cart -->
-                                <a href="#" class="add-to-cart-btn">ADD TO CART</a>
+                                <a href="{% url 'add_cart' items.id %}" class="add-to-cart-btn">ADD TO CART</a>
                             </div>
                         </div>
                         {% endfor %}
-{% comment %} 
+                        {% comment %} 
                         <!-- Single gallery Item -->
                         <div class="col-12 col-sm-6 col-lg-4 single_gallery_item wow fadeInUpBig" data-wow-delay="0.3s">
                             <!-- Product Image -->
