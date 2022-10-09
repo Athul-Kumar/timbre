@@ -1,5 +1,6 @@
 from django.db import models
 from store .models import Product
+from accounts.models import Account
 
 # Create your models here.
 
@@ -16,7 +17,9 @@ class Cart(models.Model):
 
 class Cartitem(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    cart_id = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name= 'testcase')
+    cart_id = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name= 'testcase', null=True)
+    # for fixing cart item while login
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True)
     quantitiy = models.IntegerField()
     is_active= models.BooleanField(default= True)
 

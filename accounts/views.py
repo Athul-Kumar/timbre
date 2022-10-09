@@ -69,6 +69,7 @@
 
     # ---------------jithin-------------------#
 
+from itertools import product
 from django.shortcuts import render,redirect
 from .models import Account
 from .forms import RegistrationForm
@@ -79,6 +80,8 @@ from .models import *
 from django.contrib.auth import authenticate, logout,login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from carts.views import _cart_id
+from carts .models import Cart, Cartitem
 
 
 # Create your views here.
@@ -128,6 +131,19 @@ def user_login(request):
             messages.error(request,"user Does not exist..")
         user = auth.authenticate(request,email=email,password=password)
         if user is not None:
+            try:
+                print("Entering inside the try block")
+                cart = Cart.objects.get(cart_id = _cart_id(request))
+                is_cart_item_exists = Cartitem.objects.filter( cart_id=cart).exists()
+                if is_cart_item_exists:
+                    cart_item =  Cartitem.objects.filter(cart_id = cart)
+                    print(cart_item)
+                    for item in cart_item:
+                        item.user = user 
+                        item.save()
+            except:
+                print("entering inside except block")
+                pass
             auth.login(request,user)
             return redirect('home') 
         else:

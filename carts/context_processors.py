@@ -2,6 +2,7 @@ from . models import Cart, Cartitem
 from . views import _cart_id
 from . models import Cartitem, Cart
 
+
 def counter(request):
     cart_count = 0
     if 'admin' in request.path:
@@ -9,7 +10,10 @@ def counter(request):
     else:
         try:
             cart = Cart.objects.filter(cart_id=_cart_id(request)) 
-            cart_items = Cartitem.objects.all().filter(cart_id = cart[:1])
+            if request.user.is_authenticated:
+                cart_items=Cartitem.objects.all().filter(user=request.user)
+            else:
+                cart_items = Cartitem.objects.all().filter(cart_id = cart[:1])
             for cart_item in cart_items:
                 cart_count += cart_item.quantitiy
 
