@@ -9,9 +9,12 @@ from store.models import Brandinfo
 from store.forms import BrandForm
 from category.models import Category
 from category.forms import CategoryForm
+from orders.models import Order, OrderProduct, Payment
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
 
 from category.views import category
 
@@ -270,3 +273,56 @@ def admin_brand_add(request):
     }
 
     return render(request, 'superuser/brand-add.html', context)
+
+
+
+
+
+
+def admin_orders_list(request):
+    if 'query' in request.GET:
+        query = request.GET.get('query')
+        print(query)
+        if query:
+            orders = Order.objects.filter(is_ordered = True,order_number__icontains = query).order_by('-created_at')           
+        else:
+            return redirect(admin_orders_list)
+    else:        
+        orders = Order.objects.filter(is_ordered = True).order_by('-created_at')
+    paginator = Paginator(orders, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'orders' : orders,
+        'page_obj': page_obj,
+        'serch_item':2
+    }
+    return render(request,'superuser/order-detail.html',context)
+
+
+def update_admin_order(request,id):
+    # print("moneeee")
+    if request.method == 'POST':
+        # print("nalla naari")
+        order = get_object_or_404(Order, id=id)
+        # print("entho engane")
+        status = request.POST.get('status')
+        # print("poda pattii")
+        order.status = status 
+        # print("oombbiiii")
+        # print(order.status)
+        print(status)
+        order.save()
+        print("araaaa nine")
+        if status  == "Completed":
+            try:
+                payment = Payment.objects.get(payment_id = order.order_number, status = False)
+                print(payment)
+                if payment.payment_method == 'Cash On Delivery':
+                    payment.status = True
+                    payment.save()
+            except:
+                pass
+        order.save()
+
+        return redirect(admin_orders_list)

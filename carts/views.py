@@ -61,6 +61,8 @@ def add_cart(request, product_id):
 
 
 def cart(request, total =0, quantitiy=0, cart_items=None):
+    delivery_charge = 0
+    grand_total  =0
     try:
         if request.user.is_authenticated:
             cart_items= Cartitem.objects.filter(user = request.user, is_active = True)
@@ -71,16 +73,23 @@ def cart(request, total =0, quantitiy=0, cart_items=None):
         for cart_item in cart_items:
             total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)
             quantitiy+= cart_item.quantitiy
+        
+        delivery_charge = 250 if total <= 5000 else 0
+        grand_total = total + delivery_charge
+
     except ObjectDoesNotExist:
         pass
 
     context = {
         'total': total,
         'quantitiy': quantitiy,
-        'cart_items': cart_items
+        'cart_items': cart_items,
+        'grand_total': grand_total,
+        'delivery_charge': delivery_charge
     }
     
     return render(request, 'store/cart.html', context)
+
 
 def remove_cart(request, product_id):
 
@@ -103,7 +112,6 @@ def remove_cart(request, product_id):
     return redirect('cart')
 
 def  delete_cart(request, product_id):
-   
     product = get_object_or_404(Product, id=product_id)
     if request.user.is_authenticated:
         cart_item = Cartitem.objects.get(product_id=product, user = request.user)
@@ -121,9 +129,12 @@ def  delete_cart(request, product_id):
 
 def checkout(request, total =0, quantitiy=0, cart_items=None):
     try:
-        cart= Cart.objects.get(cart_id = _cart_id(request))
-        # print(cart)
-        cart_items= Cartitem.objects.filter(cart_id = cart, is_active = True)
+        if request.user.is_authenticated:
+            cart_items= Cartitem.objects.filter(user = request.user, is_active = True)
+        else:
+            cart= Cart.objects.get(cart_id = _cart_id(request))
+            cart_items= Cartitem.objects.filter(cart_id = cart, is_active = True)
+
         # print(cart_items)
         for cart_item in cart_items:
             total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)

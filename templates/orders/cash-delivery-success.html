@@ -1,0 +1,52 @@
+ {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Cash on delivery Successfull
+{% endblock %}
+
+{% block content %}
+
+
+<div class="py-5">
+    <div class="container">
+         
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <img width="100px" src="" alt="">
+                        <h1>Order confirmed</h1>
+                        <h4>Your item will be delivered soon</h4>
+                        <h3 class="text-danger">Thank you for your purchase!!</h3>
+                        <h4 id="invoice">Your tracking number is : 
+                            
+                                {{orders.order_number}}
+
+                        </h4>
+                        <div class="row py-3 d-flex justify-content-center">
+                            <div class="col-4">
+                                <a href="{% url 'home' %}" class="btn btn-primary">Home</a>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card text-left">
+                               <div class="card-body">
+                                        <h3>Shipping Address</h3>
+                                        {{orders.full_name}} <br>
+                                        {{orders.city}}
+                                        {{orders.state}} <br>
+                                        {{orders.country}} 
+                               </div>
+                               <h3>Total: {{payment.amount_paid}}</h3> 
+                                        
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}  

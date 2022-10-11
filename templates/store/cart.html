@@ -174,13 +174,12 @@
             </div>
   
             <ul class="cart-total-chart">
-              {% comment %}
-              <li><span>Subtotal</span> <span>$59.90</span></li>
-              <li><span>Shipping</span> <span>Free</span></li>
-              {% endcomment %}
+              <li><span>Subtotal</span> <span>${{total}}</span></li>
+              <li><span>delivery Charge</span> <span>${{delivery_charge}}</span></li>
+              <hr style="height:1px;border:none;color:#333;background-color:#333;" >
               <li>
                 <span><strong>Total</strong></span>
-                <span><strong>{{total}}</strong></span>
+                <span><strong>${{grand_total}}</strong></span>
               </li>
             </ul>
             <a href="{% url 'checkout' %}" class="btn karl-checkout-btn"

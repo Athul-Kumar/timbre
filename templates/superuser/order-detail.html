@@ -1,0 +1,185 @@
+{% extends 'superuser/adminbase.html' %}
+{% load widget_tweaks %}
+{% load widget_tweaks %}
+{% load static %}
+
+
+{% block orderclass %}
+text-light
+ {% endblock %}
+
+
+{% block tablecontent %} 
+   Order managment
+{% endblock %}
+
+{% block maincontent %}
+
+
+{% for message in messages %}
+   <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show" role="alert">
+    <strong>Message: </strong> {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>  
+  {% endfor%}
+
+
+
+<table class="table">
+    <thead>
+        <tr class="table-dark text-center text-white">
+            <th>Sl No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Tracking No</th>
+            <th>Amount</th>
+            <th>Order Status</th>
+             {% comment %} <th>Change</th> {% endcomment %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in orders %}
+        <tr class="text-center align-middle text-white">
+            <td>{{forloop.counter}}</td>
+            <td>{{ obj.full_name }}</td>
+            <td>{{ obj.email }}</td>
+            <td>{{ obj.order_number }}</td>
+            <td>{{ obj.order_total }}</td>
+            <td>{{ obj.status }}</td>
+            <!-- <td> <select name="" id="">
+                    <option value="{{ form.status }}"></option>
+                </select> </td> -->
+            <!-- <td>{{form.status}}</td> -->
+            <!-- <td>
+                <button class="badge badge-primary" type="button" data-toggle="modal" data-target="#myModal{{obj.id}}"
+                id="Modal_button">Change</button>
+            </td> -->
+            <td>
+                {% if obj.status == 'Completed' %}
+                <label class="badge badge-success">Deliverd</label>
+                {% elif obj.status == 'Order cancelled' %}
+                <label class="badge badge-danger">Order cancelled</label>
+                {% elif obj.status == 'Returned' %}
+                <label class="badge badge-dark">Returned</label>
+                {% else%}
+                <a href="" class="btn btn-primary" id="del-confirm-link" data-bs-toggle="modal"
+                    data-bs-target="#myModal{{obj.id}}">{{ obj.status }}</a>
+                {% endif%}
+            </td>
+        </tr>
+        <div class="modal fade" id="myModal{{obj.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Change Status</h5>
+                        <button type="button" class="btn-close btn-primary" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <form action="{% url 'update_admin_order' obj.id %}" method="POST">
+                        {% csrf_token %}
+                    <div class="modal-body">
+                        <div style="width:300px ;" class="">
+                            {% if obj.status == 'Order confirmed' %}
+
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Order Confirmed</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Order Confirmed" checked>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Shipped</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Shipped" >
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Out for Delivery</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Out for Delivery" >
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Completed</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Completed" >
+                                </div>
+                            </div>
+
+                            {% elif obj.status == 'Shipped' %}
+
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Order Confirmed</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Order Confirmed" disabled checked>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Shipped</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Shipped" checked>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Out for Delivery</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Out for Delivery" >
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Completed</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Completed" >
+                                </div>
+                            </div>
+
+                            {% elif obj.status == 'Out for Delivery' %}
+
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Order Confirmed</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Order Conformed" disabled checked>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Shipped</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Shipped" disabled checked>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Out for Delivery</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Out for Delivery" checked>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <div><label for="status">Completed</label></div>
+                                <div>
+                                    <input type="radio" name="status" id="status" value="Completed" >
+                                </div>
+                            </div>
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="modal-footer d-flex justify-content-start">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

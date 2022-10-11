@@ -83,6 +83,8 @@ from django.http import HttpResponse
 from carts.views import _cart_id
 from carts .models import Cart, Cartitem
 
+import requests
+
 
 # Create your views here.
 def user_register(request):
@@ -132,7 +134,7 @@ def user_login(request):
         user = auth.authenticate(request,email=email,password=password)
         if user is not None:
             try:
-                print("Entering inside the try block")
+               
                 cart = Cart.objects.get(cart_id = _cart_id(request))
                 is_cart_item_exists = Cartitem.objects.filter( cart_id=cart).exists()
                 if is_cart_item_exists:
@@ -142,10 +144,22 @@ def user_login(request):
                         item.user = user 
                         item.save()
             except:
-                print("entering inside except block")
                 pass
             auth.login(request,user)
-            return redirect('home') 
+            url = request.META.get('HTTP_REFERER') 
+
+            try: 
+                query =requests.utils.urlparse(url).query
+                # print('query ->', query)
+                params = dict(x.split('=') for x in query.split('&'))
+                # print('params ->', params)
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+
+               
+            except:
+                return redirect('home') 
         else:
             messages.error(request, 'lnvalid login credentials')
             return redirect('login')

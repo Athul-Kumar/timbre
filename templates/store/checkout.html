@@ -18,52 +18,58 @@ Checkout Page
                     <div class="card">
                         <div class="card-body card-title mb-4">
                             <h4 class="mb-3">Billing Address</h4>
-                            <form action="">
+                            <form action="{% url 'place_order'%}" method="POST">
+                                {% csrf_token %}
                                 <div class="form-row">
                                     <div class="col form-group">
                                         <label for="">First Name</label>
-                                        <input type="text" name="first_name" class="form-control" required>
+                                        <input type="text" name="first_name" class="form-control"   required>
                                     </div>
                                     <div class="col form-group">
-                                        <label for="">First Name</label>
-                                        <input type="text" name="last_name" class="form-control" required>
+                                        <label for="">Last Name</label>
+                                        <input type="text" name="last_name" class="form-control"  required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="col form-group">
                                         <label for="">Email</label>
-                                        <input type="email" name="email" class="form-control" required>
+                                        <input type="email" name="email" class="form-control"  required>
                                     </div>
                                     <div class="col form-group">
                                         <label for="">Phone </label>
-                                        <input type="text" name="phone" class="form-control" required>
+                                        <input type="text" name="phone" class="form-control"   required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="col form-group">
                                         <label for="">Address Line 1</label>
-                                        <input type="text" name="Address_line_1" class="form-control" required>
+                                        <input type="text" name="address_line_1" class="form-control" required>
                                     </div>
                                     <div class="col form-group">
                                         <label for="">Address Line 2 </label>
-                                        <input type="text" name="Address_line_2" class="form-control">
+                                        <input type="text" name="address_line_2" class="form-control" >
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="col form-group">
                                         <label for="">City</label>
-                                        <input type="text" name="City" class="form-control" required>
+                                        <input type="text" name="city" class="form-control"   required>
                                     </div>
                                     <div class="col form-group">
                                         <label for="">State </label>
-                                        <input type="text" name="State" class="form-control" requird>
+                                        <input type="text" name="state" class="form-control"   requird>
                                     </div>
                                     <div class="col form-group">
                                         <label for="">Country</label>
-                                        <input type="text" name="Country" class="form-control" requird>
+                                        <input type="text" name="country" class="form-control"  requird>
                                     </div>
-                                </div>
-                            </form>
+                                    </div>
+                                     <div class="form-row">
+                                        <label for="">order Note</label>
+                                        <input type="order_note" name="order_note" class="form-control"  requird>
+                                    </div>
+                           
+                      
                         </div>
                     </div>
                 </div>
@@ -118,8 +124,11 @@ Checkout Page
                         </table>
                       </div>
 
-                    <a href="#" class="btn karl-checkout-btn">Place Order</a>
+                    {% comment %} <a href="{% url 'checkout' %}" class="btn karl-checkout-btn">Place Order</a> {% endcomment %}
+                    <button type="submit" class="btn btn-primary btn-lg" > Place Order</button>
+                    </form>
                 </div>
+                      
             </div>
 
         </div>
