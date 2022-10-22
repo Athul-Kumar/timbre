@@ -1,5 +1,6 @@
 from django import forms
-from .models import Account
+from .models import Account, UserProfile
+
 
 
 class RegistrationForm(forms.ModelForm):
@@ -46,8 +47,11 @@ class UserForm(forms.ModelForm):
         return self.first_name
             
 
-
-
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        
+        fields = ['profile_picture']
 
 
 

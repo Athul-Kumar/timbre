@@ -17,8 +17,10 @@ urlpatterns = [
    path('brandlist/', views.admin_brandlist, name="brandlist"),
    path('brand-delete/<int:id>', views.admin_brand_delete, name="brand-delete"), 
    path('brand-add/', views.admin_brand_add, name="brand-add"),
-   path('order-detail/', views.admin_orders_list, name="order-detail"),
-   path('update_admin_order/<str:id>', views.update_admin_order, name="update_admin_order") ,
+   path('order-detail/', views.admin_orderlist, name="order-detail"),
+   path('order-update/<str:id>', views.admin_order_update, name="order-update"),
+ 
+   
    
   
 ]

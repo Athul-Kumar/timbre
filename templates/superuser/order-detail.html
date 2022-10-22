@@ -25,18 +25,16 @@ text-light
   </div>  
   {% endfor%}
 
-
-
-<table class="table">
+  <table class="table">
     <thead>
         <tr class="table-dark text-center text-white">
             <th>Sl No</th>
             <th>Name</th>
             <th>Email</th>
             <th>Tracking No</th>
-            <th>Amount</th>
+            <th>Payment mode</th>
             <th>Order Status</th>
-             {% comment %} <th>Change</th> {% endcomment %}
+            <!-- <th>Change</th> -->
         </tr>
     </thead>
     <tbody>
@@ -46,8 +44,8 @@ text-light
             <td>{{ obj.full_name }}</td>
             <td>{{ obj.email }}</td>
             <td>{{ obj.order_number }}</td>
-            <td>{{ obj.order_total }}</td>
-            <td>{{ obj.status }}</td>
+            <td>{{ obj.payment.payment_method }}</td>
+            <!-- <td>{{ obj.status }}</td> -->
             <!-- <td> <select name="" id="">
                     <option value="{{ form.status }}"></option>
                 </select> </td> -->
@@ -63,10 +61,10 @@ text-light
                 <label class="badge badge-danger">Order cancelled</label>
                 {% elif obj.status == 'Returned' %}
                 <label class="badge badge-dark">Returned</label>
-                {% else%}
+                {%else%}
                 <a href="" class="btn btn-primary" id="del-confirm-link" data-bs-toggle="modal"
                     data-bs-target="#myModal{{obj.id}}">{{ obj.status }}</a>
-                {% endif%}
+                {%endif%}
             </td>
         </tr>
         <div class="modal fade" id="myModal{{obj.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -79,7 +77,7 @@ text-light
                             aria-label="Close"></button>
                     </div>
 
-                    <form action="{% url 'update_admin_order' obj.id %}" method="POST">
+                    <form action="{% url 'order-update' obj.id %}" method="POST">
                         {% csrf_token %}
                     <div class="modal-body">
                         <div style="width:300px ;" class="">
@@ -142,7 +140,7 @@ text-light
                             <div class="d-flex justify-content-between">
                                 <div><label for="status">Order Confirmed</label></div>
                                 <div>
-                                    <input type="radio" name="status" id="status" value="Order Conformed" disabled checked>
+                                    <input type="radio" name="status" id="status" value="Order Confirmed" disabled checked>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between">
@@ -165,7 +163,14 @@ text-light
                             </div>
 
                             {% endif %}
+
+
+
+                            
                         </div>
+
+
+
                     </div>
 
                     <div class="modal-footer d-flex justify-content-start">

@@ -3,6 +3,7 @@ from multiprocessing import context
 from django.shortcuts import render,redirect
 from accounts.models import Account
 from accounts.forms import RegistrationForm, UserForm
+from orders.forms import OrderForm
 from store.models import Product
 from store.forms import ProductForm
 from store.models import Brandinfo
@@ -49,7 +50,28 @@ def admin_login(request):
 
 
 def admin_home(request):
-    return render(request, 'superuser/dashboard.html')
+# product status
+
+    order_confirmed = Order.objects.filter(status='Order confirmed').count()
+    shipped = Order.objects.filter(status = 'Shipped').count()
+    out_of_delivery = Order.objects.filter(status = 'Out of Delivery').count()
+    completed = Order.objects.filter(status = 'Completed').count()
+    Cod = Payment.objects.filter(payment_method = 'Cash On Delivery', status = False).count()
+    payPal = Payment.objects.filter(payment_method = 'PayPal', status = False).count()
+    Razorpay = Payment.objects.filter(payment_method = 'RazorPay', status = False).count()
+    print(Cod, payPal, Razorpay)
+    context ={
+        'order_confirmed': order_confirmed,
+        'shipped': shipped,
+        'out_of_delivery': out_of_delivery,
+        'completed': completed,
+        'Cod': Cod,
+        'payPal': payPal,
+        'RazorPay': Razorpay,
+
+    }
+
+    return render(request, 'superuser/dashboard.html',context)
 
 
 
@@ -276,53 +298,35 @@ def admin_brand_add(request):
 
 
 
-
-
-
-def admin_orders_list(request):
-    if 'query' in request.GET:
-        query = request.GET.get('query')
-        print(query)
-        if query:
-            orders = Order.objects.filter(is_ordered = True,order_number__icontains = query).order_by('-created_at')           
+def admin_orderlist(request):
+    # print("enthada")
+    if 'key' in request.GET:
+        # print("inguvaaa ni")
+        key = request.GET.get('key')
+        if key:
+            order = Order.objects.all().filter(tracking_no__icontains = key).order_by('-created_at')
         else:
-            return redirect(admin_orders_list)
-    else:        
-        orders = Order.objects.filter(is_ordered = True).order_by('-created_at')
-    paginator = Paginator(orders, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+            return redirect('orderlist')
+    else:
+        order = Order.objects.all().filter().order_by('-created_at')
+
+    p = Paginator(order, 10)
+    page = request.GET.get('page')
+    orders = p.get_page(page)
+    # print("vallom nadakkuvo")
+    form = OrderForm()
+    
+    
     context = {
-        'orders' : orders,
-        'page_obj': page_obj,
-        'serch_item':2
+        'form' : form,
+        'orders' : orders
     }
-    return render(request,'superuser/order-detail.html',context)
+    return render(request, 'superuser/order-detail.html',context)
 
-
-def update_admin_order(request,id):
-    # print("moneeee")
+def admin_order_update(request, id):
     if request.method == 'POST':
-        # print("nalla naari")
-        order = get_object_or_404(Order, id=id)
-        # print("entho engane")
+        instance = get_object_or_404(Order, id=id)
         status = request.POST.get('status')
-        # print("poda pattii")
-        order.status = status 
-        # print("oombbiiii")
-        # print(order.status)
-        print(status)
-        order.save()
-        print("araaaa nine")
-        if status  == "Completed":
-            try:
-                payment = Payment.objects.get(payment_id = order.order_number, status = False)
-                print(payment)
-                if payment.payment_method == 'Cash On Delivery':
-                    payment.status = True
-                    payment.save()
-            except:
-                pass
-        order.save()
-
-        return redirect(admin_orders_list)
+        instance.status = status
+        instance.save()
+    return redirect('order-detail')

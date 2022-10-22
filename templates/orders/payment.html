@@ -14,7 +14,7 @@
 <div class="container">
 
 <div class="row">
-	<aside class="col-lg-8">
+	<aside class="col-lg-8 mb-3">
         <div class="card">
             <h5 class="card-header">Billing Address</h5>
             <div class="card-body">
@@ -79,7 +79,6 @@
                             </tr>
                           </tbody>
                         </table>
-                       
                 </p>
                
             </div>
@@ -98,7 +97,24 @@
                 <span><strong>Total</strong></span>
                 <span><strong>${{grand_total}}</strong></span>
               </li>
+               <div class="mt-5">
+           <form action={% url 'cash_on_delivery' product_order_number %} method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn karl-checkout-btn  btn-block">Cash on delivery</button>
+           
+            </form>
+            
+             <div id="paypal-button-container" class="mt-3 px-0 btn-lg btn-block">
+             
+             </div>
+             <button id="rzp-button1" class="btn btn-secondary  btn-block">Razorpay</button>
+
+
+          </div>
             </ul>
+
+            
+            
           
           {% comment %} <div class="mt-3 ml-5">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -130,10 +146,258 @@
           </div>
                     <!-- Button trigger modal -->
          {% endcomment %}
-        <form action={% url 'cash_on_delivery' product_order_number %} method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary btn-lg">Cash on delivery</button>
-        </form>
+        
+       
     </div>            
 </aside> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=ARS6ND_twD0WmR02A7dTcjxq749EZPqbzZM7RHvlBC8Hiklip63to-F4YI7UBMps-pxEwgmEIiNJQiEq&currency=USD"></script>
+
+<script>
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+
+{% comment %} 
+  var amount = Number("{{grand_total}}")
+  amount = amount/75   {% endcomment %}
+  var amount = "{{grand_total}}" 
+  var url = "{% url 'payments' %}"
+  var csrftoken = getCookie('csrftoken');
+  var orderID = "{{ order.order_number }}"
+  var payment_method = 'PayPal'
+  var redirect_url = "{% url 'order_complete' %}"
+  
+  console.log(amount)
+
+        paypal.Buttons({
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: amount
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Successful capture! For demo purposes:
+                    console.log(details)
+                    sendData();
+                   
+                    function sendData(){
+                      fetch(url,{
+                        method :"POST",
+                        headers : {
+                          "content-type": "application/json",
+                          "X-CSRFToken" : csrftoken,
+
+                        },
+                         body: JSON.stringify({
+                          orderID: orderID,
+                          transID: details.id,
+                          payment_method: 'PayPal',
+                          status : details.status,
+                          
+                          
+
+                         }),
+                      })
+
+
+                       .then((response) => response.json())
+                       .then((data) => {
+                        window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
+                       });
+
+                      
+                    }
+
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+</script> 
+
+
+
+
+{% comment %} 
+<!-- pay pal script -->
+<script>
+
+    function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+    }
+    var amount=Number("{{grand_total}}");
+    amount =  amount/75;
+    amount = 250
+    var url = "{% url 'payments' %}"
+    var csrftoken = getCookie('csrftoken');
+    var orderID = "{{order.order_number}}"
+    var payment_method = 'PayPal'
+    var redirect_url = "{% url 'order_complete' %}"
+    
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: amount
+                    }
+                }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                console.log(details);
+                sendData();
+                function sendData(){
+                    fetch(url, {
+                        method : "POST",
+                        headers: {
+                            "Content-type": "application/json",
+                            "X-CSRFToken": csrftoken,
+                        },
+                        body: JSON.stringify({
+                            orderID: orderID,
+                            transID: details.id,
+                            status: 'completed',
+                            paymode : "PayPal"
+                        }),
+                    })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log("ohhhhhh")
+                        window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
+                    });
+                }
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+</script> {% endcomment %}
+
+
+
+<!--          Razorpay -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var orderID = "{{order.order_number}}"
+var csrftoken = getCookie('csrftoken');
+var redirect_url = "{% url 'order_complete' %}"
+var url1 = "{% url 'razor_pay' %}";
+function sample(response){
+    // var payment_method = response.payment.payment_method
+  var options = {
+      "key": "rzp_test_BsgpW3PBm8OnAn",
+      "amount":response.payment.amount , 
+      "currency": "INR",
+      "name": "Main Gadgets",
+      "description": "purchase test 1",
+      "image": "https://example.com/your_logo",
+      "order_id": response.payment.id,
+
+      "handler": function (response2){
+          sendData1(response,response2);
+      },
+      "prefill": {
+          "name": "hai",
+          "email": "hai@gmail.com",
+          "contact": "1234567891"
+      },
+      "notes": {
+          "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+          "color": "#3399cc"
+      }
+  };
+  var rzp1 = new Razorpay(options);
+    rzp1.open();
+//     e.preventDefault();
+//   rzp1.on('payment.failed', function (response){
+//           alert(response.error.reason);
+//           //alert(response.error.metadata.order_id);
+//           //alert(response.error.metadata.payment_id);
+//   });
+}
+  document.getElementById('rzp-button1').onclick = function(e){
+      fetch(url1).then((response)=>response.json()).then(response=>{
+        console.log(response)
+         sample(response)
+         
+      })
+      e.preventDefault();
+  }
+
+  function sendData1(response,response2){  
+            console.log(response.razorpay_payment_id)
+              fetch(url,{
+                  method : "POST",
+                  headers : {
+                      "Content-type":"application/json",
+                      "X-CSRFToken": csrftoken,
+                  },
+                  body:JSON.stringify({
+                      orderID: orderID,
+                      transID: response2.razorpay_payment_id,
+                    //   razorpay_payment_id:response.razorpay_payment_id,
+                    //   razorpay_order_id:response.razorpay_order_id,
+                    //   razorpay_signature:response.razorpay_signature,
+                    //   amount_paid:amount_paid,
+                      status:'completed',
+                     payment_method:'RazerPay'
+                  }),
+              })
+              .then(response => response.json())
+              .then(data => {
+                  window.location.href = redirect_url + '?order_number='+data.order_number +'&payment_id='+data.transID;
+
+              });
+          }	
+</script>
+
+
 {% endblock%}

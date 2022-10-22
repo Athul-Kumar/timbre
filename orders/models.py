@@ -11,7 +11,7 @@ class Payment(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=100)
-    amount_id = models.CharField(max_length = 100)
+    # amount_id = models.CharField(max_length = 100)
     status = models.CharField(max_length=100)
     created_at= models.DateTimeField(auto_now_add=True)
     order_number  =models.IntegerField(null=True)
@@ -23,21 +23,26 @@ class Payment(models.Model):
 
 class Order(models.Model):
     STATUS = (
-        ('Order Confirmed', 'Order Confirmed'),
-        ('Shipped',"Shipped"),
-        ('Out for delivery',"Out for delivery"),
+        ('Order confirmed', 'Order confirmed'),
+        ('Shipped', 'Shipped'),
+        ('Out for Delivery', 'Out for Delivery'),
         ('Completed', 'Completed'),
-        ('Cancelled','Cancelled')
+        #  user side
+        ('Order cancelled', 'Order cancelled'),
+        ('Returned', 'Returned')
+
+    
     )
 
 
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
+    # product= models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)qw
     order_number = models.CharField(max_length=20)
     first_name= models.CharField(max_length=50)
     last_name= models.CharField(max_length=50)
     phone =  models.CharField(max_length=15)
-    email = models.EmailField(max_length=50)
+    email = models.EmailField(max_length=50)    
     address_line_1 = models.CharField(max_length=50)
     address_line_2= models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length= 50)
@@ -46,7 +51,7 @@ class Order(models.Model):
     order_total = models.FloatField()
     order_note = models.CharField(max_length=100, blank=True)
     delivery_charge = models.FloatField()
-    status = models.CharField(max_length=50,choices=STATUS, default= 'Order Confirmed')
+    status = models.CharField(max_length=50,choices=STATUS, default= 'Order confirmed')
     ip=  models.CharField(blank=True, max_length=20)
     is_ordered= models.BooleanField(default= False)
     created_at= models.DateTimeField(auto_now_add=True)
@@ -78,4 +83,4 @@ class OrderProduct(models.Model):
 
 
     def __str__(self):
-        return self.product.product_name
+        return self.product_id.product_name

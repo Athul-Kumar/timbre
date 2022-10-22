@@ -82,9 +82,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from carts.views import _cart_id
 from carts .models import Cart, Cartitem
+from orders .models import Order, OrderProduct
 
 import requests
-
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 def user_register(request):
@@ -258,4 +259,46 @@ def home(request):
     return render(request, 'index.html')
 
 
+def user_dashboard(request):
+    orders = Order.objects.order_by('-created_at').filter(user = request.user.id, is_ordered = True)
+    orders_count =  orders.count()
+    context = {
+        'orders_count': orders_count,
 
+    }
+    return render(request, 'accounts/dashboard.html', context)
+
+def my_orders(request):
+    orders = OrderProduct.objects.filter(user_id = request.user.id  )
+    
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'accounts/my_orders.html', context)
+
+
+def edit_profile(request):
+    
+    userprofile = get_object_or_404(UserProfile, user=request.user)
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FIELS, instance=userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+           
+            
+            messages.success(request, 'Your profile has been Updated.')
+            return redirect('edit_profile')
+    else:
+        
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance = userprofile)
+     
+    
+    context={
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+
+    return render(request, 'accounts/edit_profile.html', context)

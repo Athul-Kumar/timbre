@@ -72,6 +72,9 @@ class Account(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def has_perm(self, perm, obj=None):
         return True
 
@@ -81,3 +84,18 @@ class Account(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(Account, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(blank = True, upload_to ='photos/userprofile')
+    
+
+
+    def __str__(self):
+        return self.user.first_name
+
+    
+
+        

@@ -1,20 +1,94 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from carts.models import Cartitem
 from store.models import Product
 from .models import Order, Payment, OrderProduct
 from .forms import OrderForm
+import razorpay
 import datetime
+import json
 
 
 
 
 # ------------------------------------
 # Create your views here.
+client = razorpay.Client(auth=('rzp_test_BsgpW3PBm8OnAn', '6ggyjHFCI1nq9BBgJWqOVpxG'))
 
 def payments(request):
-   return render(request, 'orders/payment.html')
+   body = json.loads(request.body)
+   order = Order.objects.get(user= request.user, is_ordered = False, order_number= body['orderID'])
+   payment = Payment(
+      user =  request.user,
+      payment_id =body['transID'],
+      payment_method = body['payment_method'],
+      amount_paid = order.order_total,
+      status = body['status'],
+      order_number = body['orderID']
+   )
+   payment.save()
+  
+   order.payment = payment
+   order.is_ordered =True
+   order.save()
+
+      # move the cart item to the Orderproduct table
+   cart_items = Cartitem.objects.filter(user = request.user) 
+   for item in cart_items:
+
+      orderproduct =OrderProduct()
+      orderproduct.order_id = order
+      orderproduct.payment_id = payment
+      orderproduct.user_id = request.user
+      orderproduct.product_id = item.product_id
+      orderproduct.quantity = item.quantitiy
+      orderproduct.product_price = item.product_id.product_max_price
+      orderproduct.ordered = True
+      orderproduct.save()
+
+
+      # reduce the quantity of sold products
+      # print(item.product_id)
+      product = Product.objects.get(id = item.product_id.id)
+     
+      product.stock -= item.quantitiy
+      product.save()
+
+   # clear the cart
+   Cartitem.objects.filter(user=request.user).delete()
+
+   # send order number and translation back to console.(senddata)
+
+   data = {
+      'order_number': order.order_number,
+      'transID': payment.payment_id
+
+   }
+   
+   return JsonResponse(data)
+
+
+
+def order_complete(request):
+   order_number = request.GET.get('order_number')
+   transID  = request.GET.get('transID')
+
+   try:
+
+      order = Order.objects.get(order_number=order_number, is_ordered= True)
+      ordered_products = OrderProduct.objects.filter(order_id = order)
+
+      context = {
+         'order' :   order,
+         'ordered_products' : ordered_products,
+      }
+
+      return render(request, 'orders/order_complete.html')
+   except (Payment.DoesNotExist, Order.DoesNotExist):
+      return redirect('home')
+
+
 
 def place_order(request, total =0, quantitiy =0):
    current_user = request.user
@@ -88,6 +162,8 @@ def place_order(request, total =0, quantitiy =0):
  
  
 
+
+
 def cash_on_delivery(request, id):
     # Move cart item to orderd product table
    
@@ -115,6 +191,7 @@ def cash_on_delivery(request, id):
             order_product =  OrderProduct()
             order_product.order_id = order
             order_product.user_id =  request.user
+            order_product.payment_id = payment
             order_product.product_id = cart_item.product_id
             order_product.quantity =  cart_item.quantitiy
             order_product.product_price = cart_item.product_id.product_max_price
@@ -139,4 +216,24 @@ def cash_on_delivery(request, id):
       #   print("ayye patticheeeee")
         return redirect('home')
 
+
+
+
+#  RazorPay
+
+def razor_pay(request):
+        DATA = {
+            "amount": 100,
+            "currency": "INR",
+            "receipt": "receipt#1",
+            "notes": {
+                "key1": "value3",
+                "key2": "value2"
+            }
+        }
+        payment = client.order.create(data=DATA)
+        return JsonResponse({
+            'payment':payment,
+             'payment_method' : "RazorPay"
+        })
 
