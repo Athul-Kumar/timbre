@@ -3,14 +3,15 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from carts.models import Cartitem
 from store.models import Product
-from .models import Order, Payment, OrderProduct
+from .models import Order, Payment, OrderProduct, Address
 from .forms import OrderForm
+
 import razorpay
 import datetime
 import json
 
 
-
+from django.core.paginator import Paginator
 
 # ------------------------------------
 # Create your views here.
@@ -18,7 +19,9 @@ client = razorpay.Client(auth=('rzp_test_BsgpW3PBm8OnAn', '6ggyjHFCI1nq9BBgJWqOV
 
 def payments(request):
    body = json.loads(request.body)
+   print("enthada Myre")
    order = Order.objects.get(user= request.user, is_ordered = False, order_number= body['orderID'])
+   print("podaaaaaaaa myre")
    payment = Payment(
       user =  request.user,
       payment_id =body['transID'],
@@ -91,6 +94,8 @@ def order_complete(request):
 
 
 def place_order(request, total =0, quantitiy =0):
+   print(request.method)
+   print("Podaaaaaaaaaaaaaaaaaa")
    current_user = request.user
 #    if the cart count <0 then redirect to store
    cart_items = Cartitem.objects.filter(user= current_user)
@@ -109,22 +114,25 @@ def place_order(request, total =0, quantitiy =0):
    grand_total = total + delivery_charge
 
    if request.method == 'POST':
-      form =  OrderForm(request.POST)
-      if form.is_valid():
+      # form =  OrderForm(request.POST)
+      # if form.is_valid():
+         id = request.POST['flexRadioDefault']
+         address  = Address.objects.get(user = request.user,id = id)
+         print("Nokkiiiiiii")
         #  store all the billing information inside order table
 
          data = Order()
          data.user = current_user
-         data.first_name = form.cleaned_data['first_name']
-         data.last_name = form.cleaned_data['last_name']
-         data.email = form.cleaned_data['email']
-         data.phone = form.cleaned_data['phone']
-         data.address_line_1 = form.cleaned_data['address_line_1']
-         data.address_line_2 = form.cleaned_data['address_line_2']
-         data.country = form.cleaned_data['country']
-         data.state = form.cleaned_data['state']
-         data.city = form.cleaned_data['city']
-         data.order_note = form.cleaned_data['order_note']
+         data.first_name = address.first_name
+         data.last_name = address.last_name
+         data.email = address.email
+         data.phone = address.phone
+         data.address_line_1 = address.address_line_1
+         data.address_line_2 = address.address_line_2
+         data.country = address.country
+         data.state = address.state
+         data.city = address.city
+         # data.order_note = address.order_note
          data.order_total = grand_total
          data.delivery_charge = delivery_charge
          data.ip = request.META.get('REMOTE_ADDR')
@@ -153,9 +161,9 @@ def place_order(request, total =0, quantitiy =0):
          }
          return render(request,'orders/payment.html', context)
       
-      else:
-         # print(form.errors.as_data())
-         return redirect('checkout')
+      # else:
+      #    # print(form.errors.as_data())
+      #    return redirect('checkout')
 
    else:
         return redirect('checkout')
@@ -237,3 +245,71 @@ def razor_pay(request):
              'payment_method' : "RazorPay"
         })
 
+
+#  User Profile Orders
+
+
+#order management
+
+def user_orders(request):
+    orders = Order.objects.filter(user = request.user.id, is_ordered = True).order_by('-created_at') 
+    paginator = Paginator(orders, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'orders' : orders,
+        'page_obj': page_obj
+    }
+    return render(request,'accounts/dashboard/user_orders.html',context)
+
+
+
+
+def cancel_order(request,id):
+    order = Order.objects.get(order_number = id,user = request.user)
+    order.status = "Order cancelled"
+    order.save()
+    payment = Payment.objects.get(order_number = order.order_number)
+    payment.delete()
+    return redirect('user_orders')
+
+def return_order(request,id):
+    order = Order.objects.get(order_number = id,user = request.user)
+    order.status = "Returned"
+    order.save()
+    print("return adikkeda niiii")
+    print(f'The value = {order.order_number}')
+    payment = Payment.objects.get(order_number = order.order_number)
+
+    print("return Kittiii kettooo")
+    payment.delete()
+    return redirect('user_orders')
+
+def invoice_download(request,id):
+   print("invoice ippo kittumm")
+   # try:
+   #      if request.method == 'POST':
+   #          order = Order.objects.get(user = request.user,id = id)
+   #          ordered_products = OrderProduct.objects.filter(order_id=order.id)
+
+   #          subtotal = 0
+   #          for i in ordered_products:
+   #              subtotal += i.product.sub(request) * i.quantity
+
+   #          payment = Payment.objects.get(order_number=order.order_number)
+
+   #          context = {
+   #              'order': order,
+   #              'ordered_products': ordered_products,
+   #              'order_number': order.order_number,
+   #              'transID': payment.payment_id,
+   #              'payment': payment,
+   #              'subtotal': subtotal,
+   #          }
+   return render(request, 'accounts/dashboard/invoice_download.html' )
+   #      else:
+   #          print("invoice kittiyillaaa")
+   #          return redirect('home')
+   # except:
+   #      print("ippo kittilla")
+   #      return redirect('home')

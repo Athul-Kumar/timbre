@@ -50,12 +50,12 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=50)
     last_name  = models.CharField(max_length=50)
     mobile     = models.CharField(max_length=10, null=True, unique=True)
-    # mobile = models.BigIntegerField(unique=True)
-    # country_code = models.IntegerField()
+   
     email = models.EmailField(
         max_length=255,
         unique=True,
     )
+    profile_image = models.ImageField(upload_to='photos/profile_image',null=True,blank = True)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=False)
@@ -86,15 +86,6 @@ class Account(AbstractBaseUser):
         return self.is_admin
 
 
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(Account, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(blank = True, upload_to ='photos/userprofile')
-    
-
-
-    def __str__(self):
-        return self.user.first_name
 
     
 

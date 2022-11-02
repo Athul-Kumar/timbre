@@ -10,3 +10,10 @@
  input:placeholder-shown {
     background-color:  #a0a7a3!important;
  }    
+
+
+
+ .image_container{
+  max-width: 800px;
+  max-height: 450px;
+}

@@ -17,63 +17,60 @@ Checkout Page
                 <div class="checkout_details_area mt-50 clearfix">
                     <div class="card">
                         <div class="card-body card-title mb-4">
-                            <h4 class="mb-3">Billing Address</h4>
-                            <form action="{% url 'place_order'%}" method="POST">
-                                {% csrf_token %}
-                                <div class="form-row">
-                                    <div class="col form-group">
-                                        <label for="">First Name</label>
-                                        <input type="text" name="first_name" class="form-control" value="Athul"   required>
+                            {% if addresses %}
+                            <h5 class="card-header">DELIVERY ADDRESS</h5>    
+                            {% for item in addresses %}    
+                            <div class="card-body form-check row">
+                                    <div class="col-12 d-flex">
+                                        <form action="{% url 'place_order' %}" method="POST">
+                                            {% csrf_token %}
+                                        {% if forloop.counter == 1 %}
+                                        <input class="form-check-input d-block ml-0 mt-1" value="{{item.id}}" type="radio" name="flexRadioDefault" checked>
+                                        {%else%}
+                                        <input class="form-check-input d-block ml-1 mt-1" value="{{item.id}}" type="radio" name="flexRadioDefault">
+                                        {%endif%}
+                                        </a>
+                                        <div class="d-block ml-4">
+                                            <p class="card-text mb-0"><b>{{item.full_name}}</b>
+                                             <p class="card-text mb-0">{{item.address_line_1}}</p>
+                                             <p class="card-text mb-0">{{item.city}}</p>
+                                             <p class="card-text mb-0">{{item.state}}</p>
+                                            <p class="cart-text mb-0">{{item.email}}</p>
+                                            <p class="cart-text mb-0">{{item.phone}}</p>
+                                        </div>
+                                    </div>              
+                                </div>                           
+                                <hr>
+                            {%endfor%}
+                            <div class="card-body form-check row">
+                                <div class="col-12  py-2">
+                                    <div class="row d-flex align-content-center">
+                                        <div class="col-12 d-block ml-2 d-flex">
+                                            <p class="card-text mt-1 h5"><b class="text-center">Add New Address</b></p>
+                                            <a href="{% url 'add_address' %}" class="col-3 btn btn-primary ml-auto mr-5">Add</a>
+                                        </div>
                                     </div>
-                                    <div class="col form-group">
-                                        <label for="">Last Name</label>
-                                        <input type="text" name="last_name" class="form-control"  value="Kumar"  required>
+                                    
+                                </div>              
+                            </div>
+                            {%else%}
+                            <div class="card-body form-check row d-flex align-items-center" style="height: 328px;">
+                                <div class="col-12  py-5">
+                                    <div class="row d-flex align-content-center">
+                                        <div class="col-12 d-block ml-2">
+                                            <p class="card-text mb-0 h2"><b class="text-center">No addresses found in your account!</b></p>
+                                        </div>
+                                        <a href="{% url 'add_address' %}" class="col-3 btn btn-primary mx-auto mt-3">Add Address</a>
                                     </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col form-group">
-                                        <label for="">Email</label>
-                                        <input type="email" name="email" class="form-control"  value="athul@gmail.com" required>
-                                    </div>
-                                    <div class="col form-group">
-                                        <label for="">Phone </label>
-                                        <input type="text" name="phone" class="form-control"   value="7994817542" required>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col form-group">
-                                        <label for="">Address Line 1</label>
-                                        <input type="text" name="address_line_1" class="form-control"  value="knn" required>
-                                    </div>
-                                    <div class="col form-group">
-                                        <label for="">Address Line 2 </label>
-                                        <input type="text" name="address_line_2" class="form-control"  value="okok" >
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="col form-group">
-                                        <label for="">City</label>
-                                        <input type="text" name="city" class="form-control"  value="rogjij"  required>
-                                    </div>
-                                    <div class="col form-group">
-                                        <label for="">State </label>
-                                        <input type="text" name="state" class="form-control"  value="lmdm"  requird>
-                                    </div>
-                                    <div class="col form-group">
-                                        <label for="">Country</label>
-                                        <input type="text" name="country" class="form-control"  value="ddlmv" requird>
-                                    </div>
-                                    </div>
-                                     <div class="form-row">
-                                        <label for="">order Note</label>
-                                        <input type="order_note" name="order_note" class="form-control"  value="lmvdm"  requird>
-                                    </div>
-                           
-                      
+                                    
+                                </div>              
+                            </div>
+                            {%endif%}
                         </div>
+                        
                     </div>
                 </div>
-            </div>
+            </div> 
 
             <div class="col-lg-5 mt-5 pl-3">
                 <div class="order-details-confirmation">
@@ -127,6 +124,7 @@ Checkout Page
                     {% comment %} <a href="{% url 'checkout' %}" class="btn karl-checkout-btn">Place Order</a> {% endcomment %}
                     <div class="">
                         <button type="submit" class="btn karl-checkout-btn btn-lg btn-block" > Place Order</button>
+        
                     </div>
                    
                     </form>
@@ -137,7 +135,6 @@ Checkout Page
         </div>
     </div>
 </div>
-
 
 
 {% endblock%}

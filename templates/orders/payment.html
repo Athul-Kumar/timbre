@@ -27,13 +27,13 @@
                 <p class="card-text  mb-0">{{order.phone}}</p>
                
             </div>
-              <div class="card">
+              {% comment %} <div class="card">
             <h5 class="card-header">Payment Method</h5>
             <div class="card-body">
                 
-                <p class="card-text">Cash on delivery</p>
+                <p class="card-text">{{order.payment.payment_method}}</p>
                
-            </div>
+            </div> {% endcomment %}
               <div class="card">
             <h5 class="card-header">Review Products</h5>
             <div class="card-body">
@@ -180,7 +180,7 @@
   var csrftoken = getCookie('csrftoken');
   var orderID = "{{ order.order_number }}"
   var payment_method = 'PayPal'
-  var redirect_url = "{% url 'order_complete' %}"
+  var redirect_url = "{% url 'order_complete'  %}"
   
   console.log(amount)
 
@@ -326,7 +326,7 @@
 <script>
 var orderID = "{{order.order_number}}"
 var csrftoken = getCookie('csrftoken');
-var redirect_url = "{% url 'order_complete' %}"
+var redirect_url = "{% url 'order_complete'  %}"
 var url1 = "{% url 'razor_pay' %}";
 function sample(response){
     // var payment_method = response.payment.payment_method
@@ -398,6 +398,8 @@ function sample(response){
               });
           }	
 </script>
+
+ 
 
 
 {% endblock%}

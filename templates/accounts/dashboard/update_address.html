@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content%}
+
+    
+ <div class="account-dashboard">
+            <div class="container mt-5">
+                
+                <div class="row">
+                    {% include 'accounts/dashboard/dashboard_sidebar.html' %}
+                    <div class="col-sm-12 col-md-9 col-lg-9">
+                        <div class="account_login_form">
+                            <form action="" method="POST" id="address_form">
+                                {% csrf_token %}
+                                <div class="row">                                
+                                    <div class="col-lg-6">
+                                        <div class="default-form-box">
+                                            <label>First Name <span>*</span></label>
+                                            {% render_field form.first_name required="True" class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="default-form-box">
+                                            <label>Last Name <span>*</span></label>
+                                            {% render_field form.last_name required="True" class="form-control"  %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="default-form-box">
+                                            <label>Phone<span>*</span></label>
+                                            {% render_field form.phone required="True" class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="default-form-box">
+                                            <label> Email Address <span>*</span></label>
+                                            {% render_field form.email required="True" class="form-control" %}
+                                        </div>
+                                    </div>
+                                    
+            
+                                    <div class="col-6">
+                                        <div class="default-form-box">
+                                            <label>Address Line 1<span>*</span></label>
+                                            {% render_field form.address_line_1 required="True" class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="default-form-box">
+                                            <label>Address Line 2<span>*</span></label>
+                                            {% render_field form.address_line_2 class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="default-form-box">
+                                            <label>City <span>*</span></label>
+                                            {% render_field form.city required="True" class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="default-form-box">
+                                            <label>State<span>*</span></label>
+                                            {% render_field form.state required="True" class="form-control" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="default-form-box">
+                                            <label for="country">country <span>*</span></label>
+                                            {% render_field form.country class="country_option nice-select wide form-control" name="country" id="country"  %}
+                                        </div>
+                                    </div>
+    
+    
+                                    <div class="d-flex">
+                                        <div class="order_button pt-3 mt-2 mb-3 ">
+                                            <button type="submit" class="btn btn-md btn-primary px-4">SAVE</button>
+                                        </div>
+                                        <div class="order_button ml-3 pt-3 mt-2">
+                                            <a href="{% url 'address_list' %}" class="btn btn-md btn-danger">CANCEL</a>
+                                        </div>
+                                   </div>
+                                </div>
+                            </form> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+

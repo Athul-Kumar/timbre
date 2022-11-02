@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block content %}
+
+<div class="account-dashboard">
+            <div class="container mt-5">
+                
+                <div class="row">
+                    {% include 'accounts/dashboard/dashboard_sidebar.html' %}
+                    <div class="col-sm-12 col-md-9 col-lg-9">
+                        <!-- Tab panes -->
+                        <div class="tab-content dashboard_content" data-aos="fade-up" data-aos-delay="200">
+                            <div class="tab-pane fade show active" id="dashboard">
+                                <h4>Dashboard </h4>
+                                <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent
+                                        orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a
+                                        href="#">Edit your password and account details.</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}

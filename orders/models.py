@@ -21,7 +21,7 @@ class Payment(models.Model):
         return self.payment_id
 
 
-class Order(models.Model):
+class   Order(models.Model):
     STATUS = (
         ('Order confirmed', 'Order confirmed'),
         ('Shipped', 'Shipped'),
@@ -84,3 +84,29 @@ class OrderProduct(models.Model):
 
     def __str__(self):
         return self.product_id.product_name
+
+
+
+class Address(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField(max_length=50)
+    address_line_1 = models.CharField(max_length=50)
+    address_line_2 = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+
+
+    
+    def __str__(self):
+        return str(self.first_name)
+
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+    
+    def full_address(self):
+        return f'{self.address_line_1} {self.address_line_2}'

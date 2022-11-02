@@ -1,0 +1,25 @@
+.product-description{
+    font-weight: bolder;
+    
+}
+.product-description a:hover{
+    color: red;
+    text-decoration: underline;
+    
+}
+.product-description h4{
+    color: blueviolet;
+    font-weight: bolder;
+}
+
+
+    
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}

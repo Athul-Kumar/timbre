@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content%}
 <section class="section-content padding-y">
@@ -8,7 +9,7 @@
       <article class="card-body">
 		 {% include 'alerts.html'  %}
 		<header class="mb-4"><h4 class="card-title">Sign up</h4></header>
-		<form action = "{% url 'register' %}" method = "POST">
+		<form action = "{% url 'register' %}" method = "POST" id=signup>
 			    {% csrf_token %}
 			
 				<div class="form-row">
@@ -59,4 +60,5 @@
 
 
 </section>
+
 {% endblock%}

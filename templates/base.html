@@ -17,7 +17,7 @@
 
     <!-- Core Style CSS -->
     <link rel="stylesheet" href="{% static 'Timbre/css/core-style.css' %}">
-    <link rel="stylesheet" href="{% static 'Timbre/style.css' %}">
+    <link rel="stylesheet" href="{% static 'Timbre/css/styles.css' %}">
 
     <!-- Responsive CSS -->
     <link href="{% static 'Timbre/css/responsive.css' %}" rel="stylesheet">
@@ -40,21 +40,24 @@
                                         <div class= "widget-header">
                                             <small class = "title text-muted">welcome Guest</small>
                                             </div>
-                                            <a href="{% url 'register' %}">Register</a><span>/ </span>
+                                            <a href="{% url 'register' %}">Register</a><span> || </span>
                                             <a href="{% url 'login' %}" class="in">Log in</a>
                                             
                                         {% else %}
-
-                                        <div class= "widget-header">
-                                            <small class = "title text-muted">welcome {{user.first_name}}</small>
-                                            </div>
-                                            <a href="#">Dashboard</a> 
-                                                    <span>/</span>
+                                                        <!-- Example single danger button -->
+                            <div class="btn-group">
+                            <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Account
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'user_details' %}">Profile Information</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+                            </div>
+                            </div>
+                                                                        
                                             
-                                            <a href="{% url 'logout' %}" class="in">Log out</a>
-                                            
-                                            
-                                        {% endif%}
+                            {% endif%}
                             </div>
                         <div class="col-12 col-lg-7">
                             <div class="top_single_area d-flex align-items-center">
@@ -74,32 +77,7 @@
                                     <div class="cart">
                                         <a href="{% url 'cart' %}" id="header-cart-btn" target="_blank"><span
                                                 class="cart_quantity">{{cart_count}}</span> <i class="ti-bag"></i> Your Cart</a>
-                                        <!-- Cart List Area Start -->
-                                        {% comment %} <ul class="cart-list">
-                                            <li>
-                                                <a href="#" class="image"><img src="img/product-img/product-10.jpg"
-                                                        class="cart-thumb" alt=""></a>
-                                                <div class="cart-item-desc">
-                                                    <h6><a href="#">Women's Fashion</a></h6>
-                                                    <p>1x - <span class="price">$10</span></p>
-                                                </div>
-                                                <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="image"><img src="img/product-img/product-11.jpg"
-                                                        class="cart-thumb" alt=""></a>
-                                                <div class="cart-item-desc">
-                                                    <h6><a href="#">Women's Fashion</a></h6>
-                                                    <p>1x - <span class="price">$10</span></p>
-                                                </div>
-                                                <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
-                                            </li>
-                                            <li class="total">
-                                                <span class="pull-right">Total: $20.00</span>
-                                                <a href="cart.html" class="btn btn-sm btn-cart">Cart</a>
-                                                <a href="checkout-1.html" class="btn btn-sm btn-checkout">Checkout</a>
-                                            </li>
-                                        </ul> {% endcomment %}
+                                      
                                     </div>
 
                                 </div>
@@ -164,8 +142,7 @@
         {% block content %}
         
         
-        
-        
+       
         
         {% endblock %}
 
@@ -297,7 +274,9 @@
     <script src="{% static 'Timbre/js/plugins.js'%}"></script>
     <!-- Active js -->
     <script src="{% static 'Timbre/js/active.js' %}"></script>
-   
+    
+    <!-- form validation using jQuery -->
+
     
    
 

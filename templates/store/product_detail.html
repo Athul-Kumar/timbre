@@ -13,13 +13,13 @@ Product details
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <ol class="breadcrumb d-flex align-items-center">
+                        {% comment %} <ol class="breadcrumb d-flex align-items-center">
                             <li class="breadcrumb-item"><a href="#"></a></li>
                             <li class="breadcrumb-item"><a href="#"></a></li>
                             <li class="breadcrumb-item active"></li>
-                        </ol>
+                        </ol> {% endcomment %}
                         <!-- btn -->
-                        <a href="#" class="backToHome d-block"><i class="fa fa-angle-double-left"></i> Back to Category</a>
+                        <a href="{% url 'store'%}" class="backToHome d-block"><i class="fa fa-angle-double-left"></i> Back to Category</a>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@ Product details
             <div class="col-12 col-md-6">
                 <div class="single_product_thumb row justify-content-between p-4">
                     <div class="single-prd-item">
-                        <img  width = "510px" class="img-fluid" src="{{single_product.pro_images.url}}" alt="">
+                        <img  width="510px" class="img-fluid" src="{{single_product.pro_images.url}}" alt="">
                     </div>
                     <div class="single-prd-item">
                         <img   width = "120px"  class="img-fluid" src="{{single_product.pro_image_1.url}}" alt="">
@@ -62,27 +62,14 @@ Product details
                             {% else%}
                              <p class="available">Available: <span class="text-muted">Out of Stocks</span></p>
                             {% endif %}
-                         <div class="single_product_ratings mb-15">
+                         {% comment %} <div class="single_product_ratings mb-15">
                             <i class="fa fa-star" aria-hidden="true"></i>
                             <i class="fa fa-star" aria-hidden="true"></i>
                             <i class="fa fa-star" aria-hidden="true"></i>
                             <i class="fa fa-star" aria-hidden="true"></i>
                             <i class="fa fa-star-o" aria-hidden="true"></i>
-                        </div> 
+                        </div>  {% endcomment %}
 
-                        {% comment %} <div class="widget size mb-50">
-                            <h6 class="widget-title">Size</h6>
-                            <div class="widget-desc">
-                                <ul>
-                                    <li><a href="#">32</a></li>
-                                    <li><a href="#">34</a></li>
-                                    <li><a href="#">36</a></li>
-                                    <li><a href="#">38</a></li>
-                                    <li><a href="#">40</a></li>
-                                    <li><a href="#">42</a></li>
-                                </ul>
-                            </div>
-                        </div> {% endcomment %}
 
                         <!-- Add to Cart Form -->
                         {% if single_product.stock <= 0 %}
@@ -90,23 +77,13 @@ Product details
                          {% else %}
                             {% if in_cart %}
                              <div class="cart clearfix mb-50 d-flex">
-                            <div class="quantity">
-                                <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                <input type="number" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
-                                <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                            </div>
 
                             <a href="#" class="btn btn-success  btn-lg d-block ml-4" >Added to cart</a>
                             <a href="{% url 'cart' %}" class="btn btn-outline-primary  btn-lg d-block ml-4" >View Cart</a>
 
                             {% else %}
                         <div class="cart clearfix mb-50 d-flex">
-                            <div class="quantity">
-                                <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
-                                <input type="number" class="qty-text" id="qty" step="1" min="1" max="12" name="quantity" value="1">
-                                <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                            </div>
-
+                            
                             <a href="{% url 'add_cart' single_product.id %}"   class="btn cart-submit d-block" >Add to Cart</a>
                             {% endif %}
                         </div>

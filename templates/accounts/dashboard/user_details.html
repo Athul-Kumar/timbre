@@ -1,0 +1,93 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content%}
+
+<section class="section-conten padding-y bg">
+    {% include 'alerts.html' %}
+
+    <div class="container">
+        <div class="row">
+        {% include 'accounts/dashboard/dashboard_sidebar.html' %}
+        
+        <main class="col-md-9">
+            <article class="card">
+                <header class="card-header">
+                    <h3 >Account Details</h3>
+                </header>
+                <div class="card-body">
+                    <div class="row"> 
+                        <div class="col-md-12">
+                            {% for user in user_detail %}
+                            <div class="d-flex justify-content-center">
+                                <div class="item">
+                                    {% if user.profile_image %}
+                                    <img src="{{user.profile_image.url}}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
+                                    {% else %}
+                                    <img src="{% static 'Timbre/img/user-image.jpg' %}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
+                                    {% endif %}
+                                    <h5 class="mb-2"><strong>{{user.full_name}}</strong></h5>
+                                 </div>
+                            </div>
+                              <div class="login">
+                                <div class="login_form_container">
+                                    <div class="account_login_form">
+                                            <form action="" method="">
+                                                <div class="row">
+                                                    <div class="col-lg-6 mb-2">
+                                                        <div class="default-form-box">
+                                                            <label>First Name <span>*</span></label><br>
+    
+                                                            <input type="text" required="True" name="first_name" value="{{user.first_name}}"  class="form-control" disabled>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-lg-6 mb-2">
+                                                        <div class="default-form-box">
+                                                            <label>Last Name <span>*</span></label><br>
+                                                            <input type="text" required="True" name="last_name" value="{{user.last_name}}"  class="form-control" disabled>  
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="default-form-box">
+                                                            <label>Phone<span>*</span></label><br>
+                                                            <input type="text" name="phone" required="True" value="{{user.mobile}}"  class="form-control" disabled>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-lg-6">
+                                                        <div class="default-form-box">
+                                                            <label> Email Address <span>*</span></label><br>
+                                                            <input type="email" name="email"  required="True" value="{{user.email}}"  class="form-control" disabled>
+                                                        </div>
+                                                    </div>
+                                                    
+                                              
+                                                    <div class="order_button pt-3 mt-2">
+                                                    
+                                                         <a href="{% url 'user_detail_update' %}" class="btn karl-checkout-btn">Update User</a>
+                                                        </div>
+                                                    </div> 
+                                                    {% endfor%}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+                                    </div>
+                                    
+                                
+                                </div> <!-- row.// -->
+                            </div> <!-- card-body .// -->
+                        
+                        </article> <!-- order-group.// --> 
+                    </main>
+                </div> <!-- row.// -->
+                </div>
+
+
+</section>
+
+{% endblock %}

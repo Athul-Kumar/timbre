@@ -51,8 +51,9 @@
                   </td>
                   <td class="qty">
                     <div class="quantity">
+
                       <span class="qty-minus">
-                        <a href="{% url 'remove_cart' cart_item.product_id.id %}">
+                        <a href="{% url 'remove_cart' cart_item.product_id.id %} "> 
                           <i class="fa fa-minus" aria-hidden="true"></i>
                         </a>
                       </span>
@@ -63,8 +64,9 @@
                         step="1"
                         min="1"
                         max="99"
-                        name="quantity"
+                        name="quantity" 
                         value="{{cart_item.quantitiy}}"
+                        disabled
                       />
                       <span class="qty-plus">
                         <a href="{% url 'add_cart' cart_item.product_id.id %}">
@@ -77,12 +79,42 @@
                     <span>{{ cart_item.sub_total }}</span>
                   </td>
                   <td>
-                    <a
+                     {% comment %} <a
                       href="{% url 'delete_cart' cart_item.product_id.id %}"
                       class="btn btn-danger btn-rounded"
                       >Remove</a
-                    >
+                    >  {% endcomment %}
+                        <!-- Button trigger modal -->
+                     <button type="button" class="btn btn-danger btn-rounded" data-toggle="modal" data-target="#exampleModal{{cart_item.id}}">
+                      Remove
+                    </button>
                   </td>
+                            
+
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal{{cart_item.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      do you want to remove {{cart_item.product_id.product_name}}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <form action="{% url 'delete_cart' cart_item.product_id.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Remove</button>
+                      </form>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div> 
                 </tr>
                 {% endfor %}
               </tbody>
@@ -193,5 +225,7 @@
     
   </div>
 </div>
+
+
 
 {% endblock%}

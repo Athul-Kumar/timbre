@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content%}
+
+
+<section class="section-conten padding-y bg">
+    {% include 'alerts.html' %}
+
+    <div class="container">
+        <div class="row">
+            {% include 'accounts/dashboard/dashboard_sidebar.html' %}
+                 {% if orders %}
+            <div class="col-sm-12 col-md-9 col-lg-9">
+
+                        {% for order in page_obj %}   
+                        <div class="card shadow mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-5">
+                                        {% for item in order.user_order_page.all %}
+
+                                        <img width="100px" src="{{item.product_id.pro_images.url}}" alt="">
+
+                                        <div class="mt-2">
+                                            <span style="font-size:17px ;" class="text-dark">{{item.product_id.product_name}} &nbsp;x &nbsp;{{item.quantity}}  </span><br>
+                                            {% comment %} <span style="font-weight: bold;">Name:&nbsp;</span>{{item.product.product_id.brand_name}} {% endcomment %}
+                                        </div>
+                                        {%endfor%}
+                                    </div>
+                                    <div  class="col-7">
+                                        <div class="d-flex">
+                                            <div>
+                                                <span style="font-size:16px ;" class="text-dark" >Ordered to:</span><br>
+                                                {{order.full_name}} | {{order.phone}} <br>
+                                                <span style="font-size:22px ;" class="text-dark" >Total price: &nbsp;</span>₹{{order.order_total}} <br>
+                                                <span style="font-size:16px ;" class="text-dark" >Ordered status:</span> {{order.status}}
+                                            </div>
+                                             <div class="my-auto mx-auto"
+                                            data-toggle="modal"
+                                            data-target="#exampleModalCenter{{order.id}}"
+                                            > 
+
+                                             <i class="fa fa-eye fa-lg" aria-hidden="true"></i> 
+                                            {% comment %} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                                Launch demo modal
+                                            </button> {% endcomment %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+
+                                     <!-- Order Details -->
+                            <div class="modal fade" id="exampleModalCenter{{order.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col text-right">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true"><i class="fa fa-times"></i></span>
+                                                         </button>
+                                                    </div> 
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-7">
+                                                        <div class="row">
+                                                            <div class="col-md-6 mt-5">
+                                                                {% for item in order.user_order_page.all %}
+                                                                <div class="modal-add-cart-product-img">
+                                                                    <img  class="img-fluid" src="{{item.product_id.pro_images.url}}" alt="" >
+                                                                    <div class="mt-4 text-left">
+                                                                        <span style="font-weight: bold;">Product:&nbsp;</span>{{item.product_id.product_name}}<br>
+                                                                        <span style="font-weight: bold;">QTY:&nbsp;</span>{{item.quantity}} 
+                                                                        {% comment %} <span style="font-size:17px ;" class="text-dark"> x  </span><br> {% endcomment %}
+                                                                        
+                                                                    </div>
+                                                                </div>
+                                                                {%endfor%}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 modal-border mt-5">
+                                                        <span style="font-size:16px ;" class="text-dark" >Ordered to:</span><br>
+                                                        {{order.full_name}} | {{order.phone}} <br>
+                                                        <span style="font-size:22px ;" class="text-dark" >Total price: &nbsp;</span>₹{{order.order_total}} <br>
+                                                        <span style="font-size:16px ;" class="text-dark" >Ordered status:</span> {{order.status}} <br>
+                                                        <span style="font-size:16px ;" class="text-dark" >Invoice:</span> <p class="d-inline">{{order.order_number}}</p> <br>
+                                                        
+                                                        <div class="d-flex">
+                                                            {% if order.status == "Order confirmed" or order.status == "Shipped" or order.status == "Out for Delivery"  %}
+                                                            <button class="btn btn-danger text-black mt-3" data-toggle="modal"
+                                                            data-target="#order_cancel{{order.id}}">Cancel Order</button>
+                                                            {% elif order.status == "Completed" %}
+                                                            <button class="btn btn-danger text-black mt-3" data-toggle="modal"
+                                                            data-target="#order_return{{order.id}}">Return Order</button>
+                                                            {%endif%}
+                                                            <div  class="btn btn-primary mt-3 ml-2">
+                                                            <form action="{% url 'invoice_download' order.id %}" method="POST">
+                                                                {% csrf_token %}
+                                                                <button class="btn btn-primary" type="submit">Invoice</button>
+                                                            </form> 
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                          
+
+                            <!-- delete model -->
+                            <div class="modal fade" id="order_cancel{{order.id}}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog  modal-dialog-centered modal-xl" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="container-fluid">
+                                                    <div class="row text-center">
+                                                        <div class="col-12 mt-2">
+                                                            <h4 class="mb-3">Are you sure you want to cancel this order?</h4>
+                                                        </div>
+                                                        <div class="col-12 my-5 mx-auto">
+                                                            <a href="{% url 'cancel_order' order.order_number %}" class="btn btn-danger text-black">Cancel Order</a>
+                                                            <a href="" class="btn btn-primary py-2 px-5 px-5 ml-3" aria-label="Close" data-bs-dismiss="modal">NO</a>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- delete model --> 
+
+
+                            <!-- return model -->
+                            <div class="modal fade" id="order_return{{order.id}}" tabindex="-1" role="dialog" aria-hidden="true"> 
+                                <div class="modal-dialog  modal-dialog-centered modal-xl" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="container-fluid">
+                                                    <div class="row text-center">
+                                                        <div class="col-12 mt-2">
+                                                            <h4 class="mb-3">Are you sure you want to return this Order?</h4>
+                                                        </div>
+                                                        <div class="col-12 my-5 mx-auto">
+                                                            <a href="{% url 'return_order' order.order_number %}" class="btn btn-danger text-black">Return Order</a>
+                                                            <a href="" class="btn btn-primary py-2 px-5 px-5 ml-3" aria-label="Close" data-bs-dismiss="modal">NO</a>
+                                                        </div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- delete model --> 
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                    </div>
+                    {%else%}
+                    <div class="col-sm-12 col-md-9 col-lg-9">
+                        {% for message in messages %}
+                            <div class="alert alert-success mb-0 alert-dismissible fade show mb-3" role="alert">
+                                 {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                        <div class="card mb-3 text-center align-items-center h-100">
+                            <div class="jumbotron d-flex align-items-center h-100">
+                                <div class="container text-center">
+                                    <h1 class="mb-3">You dont have any orders !!</h1>
+                                    <span class="d-block mb-3">Go to store</span>
+                                    <a href="{% url 'store' %}" class="btn btn-primary btn-lg">STORE</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {%endif%}
+            </div>
+            
+            
+        </div> <!-- row.// -->
+    </div>
+
+
+</section>
+
+
+  <!-- pagination -->
+  <br><br>
+  <!-- {{userlist}}<br>
+  Has Previous: {{userlist.has_previous}}<br>
+  Has Next: {{userlist.has_next}}<br>
+  Current Page : {{userlist.number}}<br>
+  Number of pages: {{userlist.paginator.num_pages}}<br>
+  <hr><br><br> -->
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+  
+  {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link btn-danger"  href="?page=1">&laquo First</a></li>
+      <li class="page-item"><a class="page-link btn-danger"  href="?page={{ page_obj.previous_page_number }}"> previous</a></li>
+  {%endif%}
+   <li class="page-item disabled"><a href="#" class="page-link badge-danger" > Page {{page_obj.number}} of {{categorylist.paginator.num_pages}}</a></li>
+  {% if page_obj.has_next %}
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{page_obj.next_page_number}}">Next</a></li>
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{page_obj.paginatior.num_pages }}">Last &raquo</a></li>
+  {% endif%}
+
+  </ul>
+</nav>
+
+
+{% endblock %}

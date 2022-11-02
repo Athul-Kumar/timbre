@@ -1,5 +1,6 @@
 from django import forms
-from .models import Account, UserProfile
+from .models import Account
+from orders.models import Address
 
 
 
@@ -37,34 +38,31 @@ class RegistrationForm(forms.ModelForm):
                 "password does not match!"
             )
 
-class UserForm(forms.ModelForm):
 
+class UserForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['is_active']
-    
+        fields = ['is_active'] 
+
     def __str__(self):
         return self.first_name
-            
 
-class UserProfileForm(forms.ModelForm):
+
+
+
+class UserUpdationForm(forms.ModelForm):
     class Meta:
-        model = UserProfile
-        
-        fields = ['profile_picture']
+        model=Account
+        fields=['first_name','last_name' ,'email','mobile','profile_image']
+
+class AddAddress(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields=['first_name','last_name','phone','email','address_line_1','address_line_2','country','state','city']
 
 
 
 
-
-
-
-
-
-
-
-
-            
 
 # # --------------------jithin-------------------
 

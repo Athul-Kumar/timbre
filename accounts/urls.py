@@ -12,8 +12,18 @@ urlpatterns = [
     path('verify/', views.verify_code ,name='verify'),
 
 
-    path('user_dashboard/', views.user_dashboard, name="user_dashboard"),
-    path('my_orders/', views.my_orders, name="my_orders"),
-     path('edit_profile/', views.edit_profile, name="edit_profile"),
+
+    path('user_dashboard/', views.user_dashboard, name = 'user_dashboard'),
+    path('user_details/', views.user_details, name = 'user_details'),
+    path('user_detail_update/', views.user_detail_update, name = 'user_detail_update'),
+    path('address_list/',views.address_list, name='address_list'),
+    path('add_address/',views.add_address,name='add_address'),
+    path('delete_address/<int:id>',views.delete_address,name='delete_address'),
+    path('update_address/<int:id>',views.update_address,name='update_address'),
+
+
+    
+
+
     
 ]

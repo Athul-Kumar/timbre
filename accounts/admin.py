@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 # from django.contrib.auth import get_user_model
 from django.utils.html import format_html
 
-from .models import Account, UserProfile
+from .models import Account
 # Register your models here.
 
 class AccountAdmin(UserAdmin):
@@ -31,13 +31,5 @@ class AccountAdmin(UserAdmin):
     fieldsets = ()
 
 
-class UserProfileAdmin(admin.ModelAdmin):
-    def thumbnail(self, object):
-        return format_html('<img src="{}" width="30" style="border-radius: 50%;">'.format(object.profile_picture.url))
-    
-    thumbnail.short_description = 'profile_picture'
-    list_display=('thumbnail', 'user' )
 
-
-admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Account, AccountAdmin)

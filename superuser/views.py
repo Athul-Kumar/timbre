@@ -2,7 +2,7 @@ from itertools import product
 from multiprocessing import context
 from django.shortcuts import render,redirect
 from accounts.models import Account
-from accounts.forms import RegistrationForm, UserForm
+from accounts.forms import RegistrationForm,UserForm
 from orders.forms import OrderForm
 from store.models import Product
 from store.forms import ProductForm
@@ -54,11 +54,11 @@ def admin_home(request):
 
     order_confirmed = Order.objects.filter(status='Order confirmed').count()
     shipped = Order.objects.filter(status = 'Shipped').count()
-    out_of_delivery = Order.objects.filter(status = 'Out of Delivery').count()
+    out_of_delivery = Order.objects.filter(status = 'Out for Delivery').count()
     completed = Order.objects.filter(status = 'Completed').count()
     Cod = Payment.objects.filter(payment_method = 'Cash On Delivery', status = False).count()
-    payPal = Payment.objects.filter(payment_method = 'PayPal', status = False).count()
-    Razorpay = Payment.objects.filter(payment_method = 'RazorPay', status = False).count()
+    payPal = Payment.objects.filter(payment_method = 'PayPal').count()
+    Razorpay = Payment.objects.filter(payment_method = 'RazerPay').count()
     print(Cod, payPal, Razorpay)
     context ={
         'order_confirmed': order_confirmed,
