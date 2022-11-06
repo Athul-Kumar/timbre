@@ -8,10 +8,12 @@ class Category(models.Model):
     id =  models.AutoField(primary_key=True, unique=True)
     category_name= models.CharField(max_length=100, unique=True)
     slug= models.SlugField(max_length = 300, unique=True )
+    category_offer = models.IntegerField(null = True, default=0)
     description = models.TextField(max_length=255, blank=True)
     cat_image= models.ImageField(upload_to='photos/categories', null=True)
     created_date = models.DateTimeField(auto_now_add=True)
     is_available = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name='Category'

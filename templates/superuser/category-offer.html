@@ -1,0 +1,189 @@
+
+
+{% extends 'superuser/adminbase.html' %}
+{% load static %}
+
+
+
+
+{% block class %}
+text-light
+{% endblock %}
+
+
+
+{% block tablecontent %} 
+Category Offer
+
+{% endblock %}
+
+
+{% block maincontent %}
+
+
+
+  {% for message in messages %}
+   <div class="alert alert-{{ message.tags }} mb-0 alert-dismissible fade show mb-3" role="alert">
+    <strong class="ml-3">{{ message }}</strong>
+    <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>  
+  {%endfor%}
+    <!-- Modal -->
+    
+    <div class="grid-margin stretch-card">
+      <div class="card" style="height: 716px;">
+        <div class="card-body">
+          <div class="d-flex">
+            {% comment %} <p class="card-title mb-0">Categories</p> {% endcomment %}
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-borderless">
+              <thead>
+                <tr>
+                  <th>Category Name</th>
+                  <th>Created Date</th>
+                  <th>Offer</th>
+                </tr>  
+              </thead>
+              <tbody  class="text-white">
+              <tr  class="text-white">
+                {% for object in page_obj %}
+                <td  class="text-white">
+                    {{object.category_name}}
+                </td>
+                <td  class="text-white">{{object.created_at}}</td>
+                {% if object.category_offer <= 0 %}
+                <td  class="text-white">
+                    No offer
+                </td>
+                {%else%}
+                <td  class="text-white">
+                    {{object.category_offer}}%
+                </td  class="text-white">
+                {%endif%}
+                {% if object.category_offer <= 0 %}
+                <td>
+                    <button class="btn btn-primary btn-sm px-4"  data-bs-toggle="modal" data-bs-target="#exampleModalCenter{{object.id}}" > Add   </button>
+                </td>
+                {%else%}
+                <td>
+                      <button class="btn btn-sm btn-warning"  data-bs-toggle="modal" data-bs-target="#ModalCenter{{object.id}}" >Update</button>
+                      
+                      <button class="btn btn-sm btn-danger ml-3"  data-bs-toggle="modal" data-bs-target="#deleteModalCenter{{object.id}}" >Delete</button>
+                </td>
+                {%endif%}
+                
+                
+                <!-- Modal for add offer -->
+                <div class="modal fade" id="exampleModalCenter{{object.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalCenterTitle">Add Category Offer</h5>
+                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+
+
+
+                          <form action="{% url 'add-category-offer' %}" class="forms-sample" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="exampleInputUsername1">Category  Name</label>
+                              <input type="text" class="form-control" id="exampleInputUsername1" name="category_name" value="{{object.category_name}}" readonly>
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputUsername1">Offer In % :</label>
+                              <input type="number" class="form-control" id="exampleInputUsername1" name="category_offer" min="0" max="70" required="True">
+                            </div>
+                        
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                          </form>
+                        </div>                      
+                      </div>
+                  </div>
+                </div>  
+
+                <!-- Modal for update offer -->
+                <div class="modal fade" id="ModalCenter{{object.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="ModalCenterTitle">Add Category Offer</h5>
+                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+
+
+
+                          <form action="{% url 'add-category-offer' %}" class="forms-sample" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                              <label for="exampleInputUsername1">Category  Name</label>
+                              <input type="text" class="form-control" id="exampleInputUsername1" name="category_name" value="{{object.category_name}}" readonly>
+                            </div>
+                            <div class="form-group">
+                              <label for="exampleInputUsername1">Offer In % :</label>
+                              <input type="number" class="form-control" id="exampleInputUsername1" name="category_offer" value="{{object.category_offer}}" min="0" max="70" required="True">
+                            </div>
+                        
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                          </form>
+                        </div>                      
+                      </div>
+                  </div>
+                </div>
+
+                <!-- Modal for Delete offer -->
+                <div class="modal fade" id="deleteModalCenter{{object.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="ModalCenterTitle">Add Category Offer</h5>
+                          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+
+                          Do you want to delete offer of category "{{object.category_name}}" ?
+                        
+                        </div>
+                        <div class="modal-footer">
+                          <form action="{% url 'category_offer_delete' object.id %}" method="POST" class="ml-3">
+                            {% csrf_token %}
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
+                        </div>                      
+                      </div>
+                  </div>
+                </div>
+                  
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+

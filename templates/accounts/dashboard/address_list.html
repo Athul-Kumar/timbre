@@ -7,12 +7,12 @@
 
 
  <div class="account-dashboard">
-            <div class="container mt-5">
+            <div class="container mt-5" >
                 
                 <div class="row">
                     {% include 'accounts/dashboard/dashboard_sidebar.html' %}
                     {% if addresses %}
-                    <div class="col-sm-12 col-md-9 col-lg-9">
+                    <div class="col-sm-12 col-md-9 col-lg-9" >
                         {% for message in messages %}
                             <div class="alert alert-success mb-0 alert-dismissible fade show mb-3" role="alert" >
                                  {{ message }}

@@ -12,11 +12,11 @@
 		<!--   SIDEBAR .//END   -->
 	</aside>  {% endcomment %}
 
-	<div class="col-sm-12 col-md-3 col-lg-3">
-		<ul class="list-group">
-			<a class="list-group-item active" href="#"> ACCOUNT DETAILS</a>
-			<a class="list-group-item" href="#"> ORDERS </a>
-			<a class="list-group-item" href="#"> ADDRESSES</a>
+	<div class="col-sm-12 col-md-3 col-lg-3" >
+		<ul class="list-group"style="box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%)">
+			<a class="list-group-item  {% if '/accounts/user_details/' == request.path %}list-group-item-danger{% endif %}" href="{% url 'user_details'%}"> ACCOUNT DETAILS</a>
+			<a class="list-group-item  {% if '/orders/user_orders/' ==  request.path %} list-group-item-danger{% endif %}" href="{% url 'user_orders' %}"> ORDERS </a>
+			<a class="list-group-item {% if '/accounts/address_list/' == request.path %} list-group-item-danger{% endif %}" href="{% url 'address_list' %}"> ADDRESSES</a>
 			
 			
 		</ul>

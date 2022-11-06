@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from carts.models import Cartitem
 from store.models import Product
-from .models import Order, Payment, OrderProduct, Address
+from .models import Order, Payment, OrderProduct, Address, Coupon, UserCoupon
 from .forms import OrderForm
 
 import razorpay
@@ -18,16 +18,17 @@ from django.core.paginator import Paginator
 client = razorpay.Client(auth=('rzp_test_BsgpW3PBm8OnAn', '6ggyjHFCI1nq9BBgJWqOVpxG'))
 
 def payments(request):
+  
    body = json.loads(request.body)
-   print("enthada Myre")
+   # print(body['orderID'])
    order = Order.objects.get(user= request.user, is_ordered = False, order_number= body['orderID'])
-   print("podaaaaaaaa myre")
+   
    payment = Payment(
       user =  request.user,
       payment_id =body['transID'],
       payment_method = body['payment_method'],
       amount_paid = order.order_total,
-      status = body['status'],
+      status = True,
       order_number = body['orderID']
    )
    payment.save()
@@ -95,7 +96,7 @@ def order_complete(request):
 
 def place_order(request, total =0, quantitiy =0):
    print(request.method)
-   print("Podaaaaaaaaaaaaaaaaaa")
+   # print("Podaaaaaaaaaaaaaaaaaa")
    current_user = request.user
 #    if the cart count <0 then redirect to store
    cart_items = Cartitem.objects.filter(user= current_user)
@@ -107,7 +108,8 @@ def place_order(request, total =0, quantitiy =0):
    delivery_charge = 0
 
    for cart_item in cart_items:
-      total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)
+      # total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)
+      total  += int(cart_item.product_id.offer_price())*int(cart_item.quantitiy)
       quantitiy+= cart_item.quantitiy
     
    delivery_charge = 250 if total <= 5000 else 0
@@ -118,7 +120,7 @@ def place_order(request, total =0, quantitiy =0):
       # if form.is_valid():
          id = request.POST['flexRadioDefault']
          address  = Address.objects.get(user = request.user,id = id)
-         print("Nokkiiiiiii")
+         # print("Nokkiiiiiii")
         #  store all the billing information inside order table
 
          data = Order()
@@ -148,7 +150,20 @@ def place_order(request, total =0, quantitiy =0):
          data.order_number = order_number
          data.save()
 
-         
+
+         coupons = Coupon.objects.filter(active = True)
+
+         for item in coupons:
+            try:
+               coupon = UserCoupon.objects.get(user = request.user, coupone = item)
+            except:
+               coupon = UserCoupon()
+               coupon.user = request.user
+               coupon.coupone = item
+               coupon.order = data
+               coupon.save() 
+
+         coupons = UserCoupon.objects.filter(used = False, user = request.user )
          order = Order.objects.get(user = current_user, is_ordered = False, order_number=order_number)
          context = {
             'order': order,
@@ -157,6 +172,7 @@ def place_order(request, total =0, quantitiy =0):
             'delivery_charge':delivery_charge,
             'grand_total': grand_total,
             'product_order_number':order_number,
+            'coupons':coupons
 
          }
          return render(request,'orders/payment.html', context)
@@ -277,16 +293,16 @@ def return_order(request,id):
     order = Order.objects.get(order_number = id,user = request.user)
     order.status = "Returned"
     order.save()
-    print("return adikkeda niiii")
+   #  print("return adikkeda niiii")
     print(f'The value = {order.order_number}')
     payment = Payment.objects.get(order_number = order.order_number)
 
-    print("return Kittiii kettooo")
+   #  print("return Kittiii kettooo")
     payment.delete()
     return redirect('user_orders')
 
 def invoice_download(request,id):
-   print("invoice ippo kittumm")
+   # print("invoice ippo kittumm")
    # try:
    #      if request.method == 'POST':
    #          order = Order.objects.get(user = request.user,id = id)
@@ -313,3 +329,36 @@ def invoice_download(request,id):
    # except:
    #      print("ippo kittilla")
    #      return redirect('home')
+
+
+
+def coupon(request):
+   #  print("coupon kittiyillo")
+    if request.method == 'POST':
+        grand_total = request.POST.get('grand_total')
+        coupon = request.POST.get('coupon')
+        coupon_perc = 0
+        try:
+            instance = UserCoupon.objects.get(user = request.user ,coupone__code = coupon)
+            order = Order.objects.get(user = request.user,order_coupon__coupone = instance.coupone)
+            if int(grand_total) >= int(instance.coupone.min_value):
+                grand_total = int(grand_total) - ((int(grand_total) * int(instance.coupone.discount))/100)
+                coupon_perc = instance.coupone.discount
+                msg = 'Applied coupon successfully'
+                instance.used = True
+                order.order_total = grand_total
+                order.save()
+                instance.save()
+            else:
+                msg='This coupon only applicable for more than '+ str(instance.coupone.min_value)+ 'rupee only!'
+        except:
+            msg = 'Coupon is not valid'
+        response = {
+                         'grand_total': grand_total,
+                         'msg':msg,
+                         'coupon_perc':coupon_perc
+            }
+      #   print("hhhh")
+        print(grand_total)
+        print(coupon_perc)
+        return JsonResponse(response)

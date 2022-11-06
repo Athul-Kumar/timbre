@@ -77,7 +77,32 @@
                                     <div class="cart">
                                         <a href="{% url 'cart' %}" id="header-cart-btn" target="_blank"><span
                                                 class="cart_quantity">{{cart_count}}</span> <i class="ti-bag"></i> Your Cart</a>
-                                      
+                                        <!-- Cart List Area Start -->
+                                        {% comment %} <ul class="cart-list">
+                                            <li>
+                                                <a href="#" class="image"><img src="img/product-img/product-10.jpg"
+                                                        class="cart-thumb" alt=""></a>
+                                                <div class="cart-item-desc">
+                                                    <h6><a href="#">Women's Fashion</a></h6>
+                                                    <p>1x - <span class="price">$10</span></p>
+                                                </div>
+                                                <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="image"><img src="img/product-img/product-11.jpg"
+                                                        class="cart-thumb" alt=""></a>
+                                                <div class="cart-item-desc">
+                                                    <h6><a href="#">Women's Fashion</a></h6>
+                                                    <p>1x - <span class="price">$10</span></p>
+                                                </div>
+                                                <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
+                                            </li>
+                                            <li class="total">
+                                                <span class="pull-right">Total: $20.00</span>
+                                                <a href="cart.html" class="btn btn-sm btn-cart">Cart</a>
+                                                <a href="checkout-1.html" class="btn btn-sm btn-checkout">Checkout</a>
+                                            </li>
+                                        </ul> {% endcomment %}
                                     </div>
 
                                 </div>
@@ -123,9 +148,9 @@
                                                 </div>
                                             </li> 
                                             <li class="nav-item"><a class="nav-link" href="{% url 'store'%}">Store</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="#"><span
-                                                        class="karl-level">hot</span> Shoes</a></li>
-                                            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#">Coming Soon<span
+                                                        class="karl-level">hot</span></a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#"></a></li>
                                         </ul>
                                     </div>
                                 </nav>

@@ -17,8 +17,8 @@
     </div>
 
     {% else %}
-    <div class="row">
-        <div class="col-12">
+    <div class="row" >
+        <div class="col-12" >
           <div class="cart-table clearfix">
             <table class="table table-responsive">
               <thead>
@@ -46,9 +46,15 @@
                       <h6>{{cart_item.product_id.product_name}}</h6>
                     </div>
                   </td>
+                    {% if cart_item.product_id.offer_price > 0 %}
                   <td class="price">
-                    <span>{{cart_item.product_id.product_max_price}}</span>
+                    <span>{{cart_item.product_id.offer_price}}</span>
                   </td>
+                  {% else %}
+                  <td class="price">
+                    <span>{{cart_item.product_id.offer_price}}</span>
+                  </td>
+                  {% endif %}
                   <td class="qty">
                     <div class="quantity">
 
@@ -75,9 +81,11 @@
                       </span>
                     </div>
                   </td>
+                  
                   <td class="total_price">
                     <span>{{ cart_item.sub_total }}</span>
                   </td>
+                  
                   <td>
                      {% comment %} <a
                       href="{% url 'delete_cart' cart_item.product_id.id %}"
@@ -206,12 +214,12 @@
             </div>
   
             <ul class="cart-total-chart">
-              <li><span>Subtotal</span> <span>${{total}}</span></li>
-              <li><span>delivery Charge</span> <span>${{delivery_charge}}</span></li>
+              <li><span>Subtotal</span> <span>₹{{total}}</span></li>
+              <li><span>delivery Charge</span> <span>₹{{delivery_charge}}</span></li>
               <hr style="height:1px;border:none;color:#333;background-color:#333;" >
               <li>
                 <span><strong>Total</strong></span>
-                <span><strong>${{grand_total}}</strong></span>
+                <span><strong>₹{{grand_total}}</strong></span>
               </li>
             </ul>
             <a href="{% url 'checkout' %}" class="btn karl-checkout-btn"

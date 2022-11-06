@@ -121,13 +121,24 @@
                     </a>
                     <div class="collapse" id="ui-basic">
                         <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Discount</a>
+                            <li class="nav-item"> <a class="nav-link" href="{% url 'category_offer'%}">Category Offer</a>
                             </li>
-                            <li class="nav-item"> <a class="nav-link"
-                                    href="pages/ui-features/dropdowns.html">Coupons</a></li>
+                             <li class="nav-item"> <a class="nav-link" href="{% url 'product_offer' %}">Product Offer</a>
+                            </li>
+                            <li class="nav-item"> <a class="nav-link"  href="{% url 'coupon_list'%}">Coupons</a></li>
+                                   
                             <!-- <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a></li> -->
                         </ul>
                     </div>
+                </li>
+
+                <li class="nav-item menu-items">
+                    <a class="nav-link" href="{% url 'sales_report' %}">
+                        <span class="menu-icon">
+                            <i class="mdi mdi-speedometer"></i>
+                        </span>
+                        <span class="menu-title">Sales Report</span>
+                    </a>
                 </li>
                 <li class="nav-item menu-items">
                     <a class="nav-link" href="{% url 'admin_logout' %}">

@@ -25,7 +25,8 @@ class Cartitem(models.Model):
 
 
     def sub_total(self):
-        return self.product_id. product_max_price * self.quantitiy
+        # return self.product_id. product_max_price * self.quantitiy
+        return int(self.product_id.offer_price())*int(self.quantitiy)
 
     def __str__(self):
         return self.product_id.product_name

@@ -66,9 +66,15 @@
                                   <h6>{{cart_item.product_id.product_name}}</h6>
                                 </div>
                               </td>
+                              {% if cart_item.product_id.offer_price > 0 %}
                               <td class="price">
-                                <span>{{cart_item.product_id.product_max_price}}</span>
+                                <span>{{cart_item.product_id.offer_price }}</span>
                               </td>
+                              {% else %}
+                              <td class="price">
+                                <span>{{cart_item.product_id.product_max_price }}</span>
+                              </td>
+                              {% endif %}
                               <td class="qty">
                                 <div class="quantity">
                                     {{cart_item.quantitiy}}
@@ -83,19 +89,100 @@
                
             </div>
         </div>
+
+  <div class="coupon_area" id="coupon_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="coupon_code left" data-aos="fade-up" data-aos-delay="200">
+                            <h3>Coupon</h3>
+                            <div class="coupon_inner">
+                                <p>Enter your coupon code if you have one.</p>
+                                <div id="output" class="my-2 text-danger" >
+                                </div>
+                                <form id="coupon_form" method="POST">
+                                    {% csrf_token %}
+                                    <input class="mb-2" placeholder="Coupon code" type="text"
+                                        name="coupon_data" id="coupon_data"
+                                    >
+                                    <button  class="btn btn-md btn-golden" type="submit">Apply coupon</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% if coupons %}
+                    <div class="col-md-12 mt-3">
+                        <h3 class="text-success"> Availabel Coupons:</h3>
+                        <div class="faq-accordian">
+                            {% for item in coupons %}
+                            {% if forloop.counter == 1 %}
+                            <div class="faq-accordian-single-item" data-aos="fade-up" data-aos-delay="0">
+                                <input id="item-1" name="accordian-item" type="radio" checked="">
+                                <label for="item-1">{{item.coupone.discount}}% OFF</label>
+                                <div class="item-content">
+                                    <p><b>*</b>Applicable only  for order price more than {{item.coupone.min_value}}</p>
+                                    <div class="d-flex mb-3">
+                                    <span class="h4 text-success mt-2 ml-5 mr-2">Coupon Code : </span>
+                                    <div class="code text-center mr-2" style="text-transform: uppercase;
+                                        padding: 4px;
+                                        background-color: #fff;
+                                        color: red;
+                                        margin-top: 5px;
+                                        font-size: 19px;
+                                        padding-right: 57px;">
+
+                                    <span class="text-center">{{item.coupone.code}}</span>
+                                    </div>
+                                      </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="faq-accordian-single-item" data-aos="fade-up" data-aos-delay="200">
+                                <input id="item-2" name="accordian-item" type="radio">
+                                <label for="item-2">{{item.coupone.discount}}% OFF</label>
+                                <div class="item-content">
+                                    <p><b>*</b>Applicable only  for order price more than {{item.coupone.min_value}}</p>
+                                    <div class="d-flex mb-3">
+                                    <span class="h4 text-success mt-2 ml-5 mr-2">Coupon Code : </span>
+                                    <div class="code text-center mr-2" style="text-transform: uppercase;
+                                        padding: 4px;
+                                        background-color: #fff;
+                                        color: red;
+                                        margin-top: 5px;
+                                        font-size: 19px;
+                                        padding-right: 57px;">
+
+                                    <span class="text-center">{{item.coupone.code}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            
+                        </div>
+
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div> <!-- End Coupon Start -->  
     </aside> <!-- col.// -->
 
-
-    <aside class="col-lg-4">
-        <div class="cart-total-area mb-5">
-           
+    <aside class="col-lg-4 mb-5"  id="amount-caontainer"> 
             <ul class="cart-total-chart">
-              <li><span>Subtotal</span> <span>${{total}}</span></li>
-              <li><span>delivery Charge</span> <span>${{delivery_charge}}</span></li>
+              <li><span>Subtotal</span> <span>₹{{total}}</span></li>
+              <li><span>delivery Charge</span> <span>₹{{delivery_charge}}</span></li>
+
+
+              <div class="cart_subtotal" id="coupon_block" style="display: none!important;">
+                {% comment %} <p>Coupon</p>
+                <p class="cart_amount"> - <b id="coupon_perc"></b>%</p> {% endcomment %}
+                <li><span>Coupon</span> <span class="cart_amount" id="coupon_perc"> </span></li>
+              </div>
+               
               <hr style="height:1px;border:none;color:#333;background-color:#333;" >
               <li>
                 <span><strong>Total</strong></span>
-                <span><strong>${{grand_total}}</strong></span>
+                <span id="grand_total"><strong>₹{{grand_total}}</strong></span>
               </li>
                <div class="mt-5">
            <form action={% url 'cash_on_delivery' product_order_number %} method="POST">
@@ -150,7 +237,8 @@
        
     </div>            
 </aside> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
   <script src="https://www.paypal.com/sdk/js?client-id=ARS6ND_twD0WmR02A7dTcjxq749EZPqbzZM7RHvlBC8Hiklip63to-F4YI7UBMps-pxEwgmEIiNJQiEq&currency=USD"></script>
 
@@ -400,6 +488,45 @@ function sample(response){
 </script>
 
  
+
+<script>
+$('#coupon_form').on('submit', function(e){
+
+e.preventDefault();
+
+  $.ajax({
+      type : "POST", 
+      url: "{% url 'coupon' %}",
+      data: {
+          coupon : $('#coupon_data').val(),
+          grand_total : '{{grand_total}}',
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        dataType: "json",
+
+      },
+      
+      success: function(data){
+          $('#output').html(data.msg) /* response message */
+          $('#amount-caontainer #grand_total').text(data.grand_total)
+          $('#amount-caontainer #coupon_perc').text(data.coupon_perc)
+          if (data.coupon_perc > 0) {
+
+              $('#amount-caontainer #coupon_block').show()
+              $('#coupon_container').hide()
+          }
+          
+      },
+
+      failure: function() {
+          
+      }
+
+
+  });
+
+
+        });    
+</script>
 
 
 {% endblock%}

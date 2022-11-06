@@ -105,9 +105,15 @@ Checkout Page
                                   <h6>{{cart_item.product_id.product_name}}</h6>
                                 </div>
                               </td>
+                              {% if cart_item.product_id.offer_price > 0 %}
+                              <td class="price">
+                                <span>{{cart_item.product_id.offer_price}}</span>
+                              </td>
+                              {% else %}
                               <td class="price">
                                 <span>{{cart_item.product_id.product_max_price}}</span>
                               </td>
+                              {% endif %}
                               <td class="qty">
                                 <div class="quantity">
                                     {{cart_item.quantitiy}}

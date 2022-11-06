@@ -72,7 +72,8 @@ def cart(request, total =0, quantitiy=0, cart_items=None):
             cart_items= Cartitem.objects.filter(cart_id = cart, is_active = True)
 
         for cart_item in cart_items:
-            total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)
+            # total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)
+            total += int(cart_item.product_id.offer_price())*int(cart_item.quantitiy)
             quantitiy+= cart_item.quantitiy
         
         delivery_charge = 250 if total <= 5000 else 0

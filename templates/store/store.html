@@ -61,22 +61,35 @@ store Page
                    
 
                         <!-- Single gallery Item -->
-                        {% for items in products%}
+                        {% for items in products %}
                         <div class="col-12 col-sm-6 col-lg-4 single_gallery_item wow fadeInUpBig" data-wow-delay="0.2s">
-                            <div class="card">
+                            <div class="card" style="box-shadow: 0 0.5rem 1rem rgb(0 0 0/ 15%)">
                                 <div class="card-body">
                                      <!-- Product Image -->
                                     <div class="product-img">
                                         <img src="{{items.pro_images.url}}" alt="" width="200px">
                                         
                                     </div>
+                                    {% if items.product_offer > 0 %}
                                     <!-- Product Description -->
                                     <div class="product-description">
-                                        <h4 class="product-price">₹ &nbsp {{items.product_max_price}}</h4>
+                                        <h6 class="product-price"><del>₹ &nbsp {{items.product_max_price}}</del></h6>
+                                        <h4> ₹ &nbsp {{items.offer_price}}</h4>
+                                       
                                         <p><a href="{{ items.get_absolute_url }}">{{items.product_name}}</a></p>
                                         <!-- Add to Cart -->
                                         <a href="{% url 'add_cart' items.id %}" class="add-to-cart-btn">ADD TO CART</a>
                                     </div>
+                                    {% else %}
+                                        <div class="product-description mb-4">
+                                        <h4 class="product-price">₹ &nbsp {{items.product_max_price}}</h4>
+                                        
+                                       
+                                        <p><a href="{{ items.get_absolute_url }}">{{items.product_name}}</a></p>
+                                        <!-- Add to Cart -->
+                                        <a href="{% url 'add_cart' items.id %}" class="add-to-cart-btn">ADD TO CART</a>
+                                    </div>
+                                    {% endif %}
 
                                 </div>
                                 

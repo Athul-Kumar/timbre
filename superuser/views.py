@@ -14,11 +14,14 @@ from orders.models import Order, OrderProduct, Payment
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-# from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 
 from category.views import category
-
+from orders.models import Coupon
+from orders.forms import CouponForm
+import datetime
+from datetime import datetime,timedelta,date
+from django.db.models import Sum,Q
 
 # Create your views here.
 
@@ -156,6 +159,7 @@ def admin_category(request):
 
 
 def admin_category_add(request):
+    # print("Category Enter")
     if request.method == 'POST':
         form=CategoryForm(request.POST, request.FILES)
         if form.is_valid():
@@ -163,6 +167,7 @@ def admin_category_add(request):
             messages.success(request, 'Category added successfully.')
             return redirect('categorylist')
         else:
+            print(form.errors.as_data())
             messages.error(request, 'Category added failed.')
             return redirect('categorylist')
         
@@ -171,6 +176,7 @@ def admin_category_add(request):
         
         'form': form
     }
+    print(form)
 
     return render(request, 'superuser/category-add.html', context)
 
@@ -330,3 +336,216 @@ def admin_order_update(request, id):
         instance.status = status
         instance.save()
     return redirect('order-detail')
+
+
+
+#  AdminCoupon Section
+
+def admin_display_coupon(request):
+    if 'query' in request.GET:
+        query = request.GET.get('query')
+        print(query)
+        if query:
+            coupons = Coupon.objects.filter(code__icontains = query)            
+        else:
+            return redirect(admin_display_coupon)
+    else:
+        coupons = Coupon.objects.all()
+    paginator = Paginator(coupons, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    print(coupons)
+    context = {
+        'coupons': coupons,
+        'page_obj' : page_obj,
+        'serch_item':8
+    }
+    return render(request, 'superuser/coupon-list.html', context)
+
+
+
+def admin_add_coupon(request):
+    if request.method == 'POST':
+        form = CouponForm(request.POST , request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Coupon Added successfully')
+            return redirect(admin_display_coupon)
+        else:
+            messages.error(request, 'Coupon with this code already exists !')
+            return redirect(admin_display_coupon)
+    form = CouponForm()
+    today_date=str(datetime.date.today())
+    context = { 
+        'form':form,
+        'today_date': today_date
+    }
+    return render(request,'superuser/add-coupon.html',context)
+
+def coupon_delete(request,id):
+    print("delte")
+    if request.method == 'POST' :
+        coupon = Coupon.objects.get(id=id)
+        coupon.delete()
+        messages.error(request, 'Coupon deleted successfully')
+    return redirect(admin_display_coupon)
+
+
+def coupon_update(request, id) :
+    category = Coupon.objects.get(id=id)
+    if request.method == 'POST' :
+        form = CouponForm(request.POST, request.FILES, instance=category)   
+        if form.is_valid() :
+            form.save()
+            messages.success(request,'Coupon Updated success fully ')
+            return redirect(admin_display_coupon)    
+    form = CouponForm(instance=category)
+    today_date=str(datetime.date.today())
+    context = {'form' : form,'today_date': today_date}
+    return render(request, 'superuser/add-coupon.html', context)  
+
+
+
+
+
+# @staff_member_required(login_url='admin_login')
+def category_offer(request):
+    if 'query' in request.GET:
+        query = request.GET.get('query')
+        print(query)
+        if query:
+            category=Category.objects.filter(category_name__icontains = query)
+        else:
+            return redirect(admin_category)
+    else:
+        category=Category.objects.all()
+    paginator = Paginator(category, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context={
+        'category':category,
+        'page_obj': page_obj,
+        'serch_item':7
+    }
+
+    return render(request,'superuser/category-offer.html',context)
+
+# @staff_member_required(login_url='admin_login')
+def add_category_offer(request):
+    if request.method == 'POST' :
+        category_name = request.POST.get('category_name')
+        category_offer = request.POST.get('category_offer')
+        category = Category.objects.get(category_name = category_name)
+        category.category_offer =  category_offer
+        category.save()
+        messages.success(request,'Added Category offer success fully')
+        return redirect('category_offer')
+        
+# @staff_member_required(login_url='admin_login')
+def category_offer_delete(request,id):
+    if request.method == 'POST' :
+        category = Category.objects.get(id = id)
+        category.category_offer =  0
+        category.save()
+        messages.error(request,'Deleted Category offer successfully')
+        return redirect('category_offer')
+        
+
+
+
+def product_offer(request):
+    if 'query' in request.GET:
+        query = request.GET.get('query')
+        print(query)
+        if query:
+            product=Product.objects.filter(product_name__icontains = query).order_by('-created_at')
+        else:
+            return redirect(admin_productlist)
+    else:
+        product=Product.objects.all()
+    paginator = Paginator(product, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context={
+        'product':product,
+        'page_obj':page_obj,
+         'serch_item':6
+    }
+    return render(request,'superuser/product-offer.html',context)
+
+# @staff_member_required(login_url='admin_login')
+def add_product_offer(request):
+    if request.method == 'POST' :
+        product_name = request.POST.get('product_name')
+        product_offer = request.POST.get('product_offer')
+        product = Product.objects.get(product_name = product_name)
+        product.product_offer = product_offer 
+        product.save()
+        messages.success(request,'Added product offer success fully')
+        return redirect('product_offer')
+
+# @staff_member_required(login_url='admin_login')
+def product_offer_delete(request,id):
+    if request.method == 'POST' :
+        product = Product.objects.get(id = id)
+        product.product_offer =  0
+        product.save()
+        messages.success(request,'Deleted product offer successfully')
+        return redirect('product_offer')
+
+
+#  sales report
+
+
+# @staff_member_required(login_url='admin_login')
+def sales_report(request):
+    year = datetime.now().year
+    today = datetime.today()
+    month = today.month
+    years = []
+    today_date=str(date.today())
+
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        val = datetime.strptime(end_date, '%Y-%m-%d')
+        end_date = val+timedelta(days=1)
+        orders = Order.objects.filter(Q(created_at__lt=end_date),Q(created_at__gte=start_date),payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()
+        # print(orders)
+    else:
+        # print(orders)
+        orders = Order.objects.filter(created_at__year = year,created_at__month=month,payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()
+        # print(orders)
+    year = today.year
+    for i in range (10):
+        val = year-i
+        years.append(val)
+    context = {
+        'orders':orders,
+        'today_date':today_date,
+        'years':years
+    }
+    return render(request,'superuser/sales-report.html',context)  
+
+# @staff_member_required(login_url='admin_login')
+def sales_report_month(request,id):
+    orders = Order.objects.filter(created_at__month = id,payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
+    print(orders)
+    today_date=str(date.today())
+    context = {
+        'orders':orders,
+        'today_date':today_date
+    }
+    return render(request,'superuser/sales-report-table.html',context) 
+
+
+
+# @staff_member_required(login_url='admin_login')
+def sales_report_year(request,id):
+    orders = Order.objects.filter(created_at__year = id,payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
+    today_date=str(date.today())
+    context = {
+        'orders':orders,
+        'today_date':today_date
+    }
+    return render(request,'superuser/sales-report-table.html',context) 

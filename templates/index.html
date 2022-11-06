@@ -1,4 +1,5 @@
 {% extends 'base.html'%}
+{% load static %}
 {% block title %} Home {% endblock %}
 
 {% block content %}
@@ -9,16 +10,15 @@
     <div class="welcome_slides owl-carousel">
         <!-- Single Slide Start -->
         <div class="single_slide height-800 bg-img background-overlay"
-            style="background-image: url(img/bg-img/bg-1.jpg);">
+            style="background-image: url({% static 'Timbre/img/background-img/banner-one.webp'%})">
             <div class="container h-100">
                 <div class="row h-100 align-items-center">
                     <div class="col-12">
                         <div class="welcome_slide_text">
-                            <h6 data-animation="bounceInDown" data-delay="0" data-duration="500ms">* Only today we offer
-                                free shipping</h6>
-                            <h2 data-animation="fadeInUp" data-delay="500ms" data-duration="500ms">Fashion Trends</h2>
-                            <a href="#" class="btn karl-btn" data-animation="fadeInUp" data-delay="1s"
-                                data-duration="500ms">Shop Now</a>
+                            <h6 data-animation="bounceInDown" data-delay="0" data-duration="500ms">*Welcome to the world of Audiophiles!</h6>
+                            <h2 data-animation="fadeInUp" data-delay="500ms" data-duration="500ms">Music Trends</h2>
+                            <a href="{% url 'store' %}" class="btn karl-btn" data-animation="fadeInUp" data-delay="1s"
+                                data-duration="500ms">Check Collections</a>
                         </div>
                     </div>
                 </div>
@@ -27,16 +27,15 @@
 
         <!-- Single Slide Start -->
         <div class="single_slide height-800 bg-img background-overlay"
-            style="background-image: url(img/bg-img/bg-4.jpg);">
+            style="background-image: url({% static 'Timbre/img/background-img/banner-two.webp'%});">
             <div class="container h-100">
                 <div class="row h-100 align-items-center">
                     <div class="col-12">
                         <div class="welcome_slide_text">
-                            <h6 data-animation="fadeInDown" data-delay="0" data-duration="500ms">* Only today we offer
-                                free shipping</h6>
-                            <h2 data-animation="fadeInUp" data-delay="500ms" data-duration="500ms">Summer Collection
+                            <h6 data-animation="fadeInDown" data-delay="0" data-duration="500ms">* Nation of Music is here!</h6>
+                            <h2 data-animation="fadeInUp" data-delay="500ms" data-duration="500ms">New Collections
                             </h2>
-                            <a href="#" class="btn karl-btn" data-animation="fadeInLeftBig" data-delay="1s"
+                            <a href="{% url 'store' %}" class="btn karl-btn" data-animation="fadeInLeftBig" data-delay="1s"
                                 data-duration="500ms">Check Collection</a>
                         </div>
                     </div>
@@ -46,16 +45,15 @@
 
         <!-- Single Slide Start -->
         <div class="single_slide height-800 bg-img background-overlay"
-            style="background-image: url(img/bg-img/bg-2.jpg);">
+            style="background-image: url({% static 'Timbre/img/background-img/banner-three.webp'%});">
             <div class="container h-100">
                 <div class="row h-100 align-items-center">
                     <div class="col-12">
                         <div class="welcome_slide_text">
-                            <h6 data-animation="fadeInDown" data-delay="0" data-duration="500ms">* Only today we offer
-                                free shipping</h6>
-                            <h2 data-animation="bounceInDown" data-delay="500ms" data-duration="500ms">Women Fashion
+                            <h6 data-animation="fadeInDown" data-delay="0" data-duration="500ms"></h6>
+                            <h2 data-animation="bounceInDown" data-delay="500ms" data-duration="500ms">Rise of Audiophiles
                             </h2>
-                            <a href="#" class="btn karl-btn" data-animation="fadeInRightBig" data-delay="1s"
+                            <a href="{% url 'store' %}" class="btn karl-btn" data-animation="fadeInRightBig" data-delay="1s"
                                 data-duration="500ms">Check Collection</a>
                         </div>
                     </div>
@@ -169,7 +167,7 @@
                 {% for items in product %}
                
                 <div class="col-12 col-sm-6 col-md-4 single_gallery_item women wow fadeInUpBig" data-wow-delay="0.2s">
-                    <div class="card">
+                    <div class="card" style="box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 15%)">
                         <div class="card-body">
                             <div class="d-flex justify-content-around">
                                 <div class="product-img">
@@ -179,21 +177,47 @@
                                  
                             </div>
                              <!-- Product Image -->
-                        
+
+                             {% if items.product_offer > 0 %} 
+                            
                             <div class="d-flex justify-content-around  text-center" >
+                                
+                                <!-- Product Description -->
+                                <div class="product-description">
+                                    <br>
+                                    <h6 class="product-price"><del>₹ &nbsp{{items.product_max_price}}</del></h6>
+                                    <h4><span>₹ &nbsp{{items.offer_price}}</span></h4>
+                                    <br>
+                                     {% comment %} <br>
+                                    <h4 class="product-price">₹ &nbsp{{items.offer_price}}</h4>
+                                    <br>
+                                   {% endcomment %}
+                                    <a href="{{items.get_absolute_url}}">{{items.product_name}}</a>
+                                    <!-- Add to Cart -->
+                                    
+                                    
+                                </div>
+                                 
+
+                            </div>
+                            {%else%}
+                            <div class="d-flex justify-content-around  text-center mb-4" >
                                 
                                 <!-- Product Description -->
                                 <div class="product-description">
                                     <br>
                                     <h4 class="product-price">₹ &nbsp{{items.product_max_price}}</h4>
                                     <br>
+                                  
                                     <a href="{{items.get_absolute_url}}">{{items.product_name}}</a>
                                     <!-- Add to Cart -->
                                     
                                     
                                 </div>
+                                 
 
                             </div>
+                              {% endif %} 
 
                         </div>
                        
@@ -206,8 +230,7 @@
                    
                 </div>
                  {% endfor%}
-                
-    
+            
                
             </div>
         </div>
