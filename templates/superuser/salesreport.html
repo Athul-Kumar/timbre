@@ -1,0 +1,265 @@
+{% extends 'superuser/adminbase.html' %}
+{% load widget_tweaks %}
+
+{% block productclass %}
+text-light
+{% endblock %}
+
+{% block tablecontent %} 
+
+    Sales Report
+
+{% endblock %}
+
+
+{% block maincontent %}
+
+<div class="container">
+  <form action="{% url 'sales_report' %}" method="POST">
+    {% csrf_token %}
+    <div class="col-md-2">
+      <label for="" class="h5">Starting Date : </label>
+      <input type="date" id="start_date" name="start_date" required="True" class="form-control text-white">
+    </div>
+    <div class="col-md-2">
+      <label for="" class="h5">Ending Date : </label>
+    <input type="date" id="end_date" name="end_date" required="True" class="form-control text-white">
+    </div>
+    <div class="mb-2"><button class="btn btn-success btn-sm mt-2 ml-3 px-4" type="submit">Filter</button></div>
+  </form>
+</div>
+
+      
+
+<div class="container d-flex justify-content-between">
+  <div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Month
+        </button>
+        <div class="dropdown-menu">
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=1 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            Janaury
+            </a>
+    
+    
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=2 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            February
+            </a>
+    
+    
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=3 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            March
+            </a>
+    
+    
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=4 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            April
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=5 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            May
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=6 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            June
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=7 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            July
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=8 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            August
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=9 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            September
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=10 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            October
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=11 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            November
+            </a>
+    
+            <a class="dropdown-item text-white"
+            hx-get="{% url 'sales_report_month' id=12 %}"
+            hx-trigger="click"
+            hx-target="#slaes-report-table"
+            hx-swap="innerHTML"
+            >
+            December
+            </a>
+    
+        </div>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Year
+        </button>
+        <div class="dropdown-menu">
+          {% for year in years %}
+    
+          <a class="dropdown-item text-white"
+          hx-get="{% url 'sales_report_year' id=year %}"
+          hx-trigger="click"
+          hx-target="#slaes-report-table"
+          hx-swap="innerHTML"
+          >
+          {{year}}
+          </a>
+    
+    
+         {%endfor%}
+        </div>
+      </div>
+  </div>
+  <div>
+    <div class="">
+      <button class="btn  btn-primary " onclick="ExportToExcel('xlsx')">Export To Excel</button>
+      <input type="button" class="btn btn-success " id="btnExport" value="Export To PDF" />
+      <button class="btn btn-warning " id="btn-export" onclick="exportHTML();">Export To Doc</button>
+    </div>
+  </div>
+
+</div>
+
+ 
+<div class="container">
+  {% include 'superuser/sales-report-table.html' %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+
+<!-- script for xel creation -->
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script>
+  function ExportToExcel(type, fn, dl) {
+       var elt = document.getElementById('tbl_exporttable_to_xls');
+       var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+       return dl ?
+         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+         XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+    }
+</script>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+
+<!-- script for for pdf creation -->
+<script type="text/javascript">
+  $("body").on("click", "#btnExport", function () {
+      html2canvas($('#tbl_exporttable_to_xls')[0], {
+          onrendered: function (canvas) {
+              var data = canvas.toDataURL();
+              var docDefinition = {
+                  content: [{
+                      image: data,
+                      width: 500
+                  }]
+              };
+              pdfMake.createPdf(docDefinition).download("customer-details.pdf");
+          }
+      });
+  });
+</script>
+
+<script src="https://unpkg.com/htmx.org@1.8.0" integrity="sha384-cZuAZ+ZbwkNRnrKi05G/fjBX+azI9DNOkNYysZ0I/X5ZFgsmMiBXgDZof30F5ofc" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script> -->
+
+
+<!-- doc -->
+
+<script>
+    function exportHTML(){
+       var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+            "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+            "xmlns='http://www.w3.org/TR/REC-html40'>"+
+            "<head><meta charset='utf-8'><title>Export HTML to Word Document with JavaScript</title></head><body>";
+       var footer = "</body></html>";
+       var sourceHTML = header+document.getElementById("slaes-report-table").innerHTML+footer;
+       
+       var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+       var fileDownload = document.createElement("a");
+       document.body.appendChild(fileDownload);
+       fileDownload.href = source;
+       fileDownload.download = 'document.doc';
+       fileDownload.click();
+       document.body.removeChild(fileDownload);
+    }
+</script>
+
+
+
+<script>
+
+</script>
+
+
+{% endblock%}

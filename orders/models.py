@@ -36,7 +36,7 @@ class   Order(models.Model):
 
     
     )
-
+    # id =  models.AutoField(primary_key=True, unique=True)
     user = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
     product= models.ForeignKey(Product, on_delete=models.SET_NULL, blank=True, null=True)
@@ -71,7 +71,7 @@ class   Order(models.Model):
 
 
 class OrderProduct(models.Model):
-
+    # id = models.AutoField(primary_key=True, unique=True)
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='user_order_page')
     payment_id = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
     user_id = models.ForeignKey(Account, on_delete=models.CASCADE)

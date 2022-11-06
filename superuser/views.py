@@ -510,11 +510,11 @@ def sales_report(request):
         end_date = request.POST.get('end_date')
         val = datetime.strptime(end_date, '%Y-%m-%d')
         end_date = val+timedelta(days=1)
-        orders = Order.objects.filter(Q(created_at__lt=end_date),Q(created_at__gte=start_date),payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()
+        orders = Order.objects.filter(Q(created_at__lt=end_date),Q(created_at__gte=start_date),payment__status = True).values('user_order_page__product_id__product_name','user_order_page__product_id__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()
         # print(orders)
     else:
         # print(orders)
-        orders = Order.objects.filter(created_at__year = year,created_at__month=month,payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()
+        orders = Order.objects.filter(created_at__year = year,created_at__month=month,payment__status = True).values('user_order_page__product_id__product_name','user_order_page__product_id__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()
         # print(orders)
     year = today.year
     for i in range (10):
@@ -525,27 +525,33 @@ def sales_report(request):
         'today_date':today_date,
         'years':years
     }
-    return render(request,'superuser/sales-report.html',context)  
+    
+    return render(request,'superuser/salesreport.html',context)
+      
 
 # @staff_member_required(login_url='admin_login')
 def sales_report_month(request,id):
-    orders = Order.objects.filter(created_at__month = id,payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
-    print(orders)
+    print("reached")
+    orders = Order.objects.filter(created_at__month = id,payment__status = True).values('user_order_page__product_id__product_name','user_order_page__product_id__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
+   
     today_date=str(date.today())
     context = {
         'orders':orders,
         'today_date':today_date
     }
+    print(orders)
     return render(request,'superuser/sales-report-table.html',context) 
+  
 
 
 
 # @staff_member_required(login_url='admin_login')
 def sales_report_year(request,id):
-    orders = Order.objects.filter(created_at__year = id,payment__status = True).values('user_order_page__product__product_name','user_order_page__product__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
+    orders = Order.objects.filter(created_at__year = id,payment__status = True).values('user_order_page__product_id__product_name','user_order_page__product_id__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
     today_date=str(date.today())
     context = {
         'orders':orders,
         'today_date':today_date
     }
-    return render(request,'superuser/sales-report-table.html',context) 
+    return render(request,'superuser/sales-report-table.html',context)
+    
