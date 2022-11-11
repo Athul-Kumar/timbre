@@ -106,7 +106,8 @@ text-light
     </div>
 
 </div>
-<script src="{% static 'Adminpanel/js/cropper.js' %}"></script>
+
+{% comment %} <script src="{% static 'Adminpanel/js/cropper.js' %}"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -125,6 +126,6 @@ const cropper = new Cropper(image, {
     console.log(event.detail.scaleX);
     console.log(event.detail.scaleY);
   },
-});
+}); {% endcomment %}
 
 {% endblock %}
