@@ -3,6 +3,7 @@
 <html lang="en">
 
 <head>
+    
     <meta charset="UTF-8">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,9 +23,20 @@
     <!-- Responsive CSS -->
     <link href="{% static 'Timbre/css/responsive.css' %}" rel="stylesheet">
 
+    <style>
+    .not-visible {
+    display: none;
+    }
+    .error {
+    color:red;
+    }
+    </style>
+
+
 </head>
 
-<body>
+<body id="" >
+    
 
     <div id="wrapper">
 
@@ -302,8 +314,68 @@
     
     <!-- form validation using jQuery -->
 
-    
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
    
+<script src= "https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"> </script>
+
+
+<script>
+  $(document).ready(function(){
+  $("#signup").validate({
+    rules:{
+          first_name:{
+            required:true,
+            minlength:2
+                 }, 
+          last_name:{
+            required:false,
+            minlength:2
+                },
+            
+                mobile:{
+                  required: true,
+                  number: true,
+                  minlength:10,
+                  maxlength:10, 
+                },
+                password:{
+                  required:true,
+                  minlength : 6
+                },
+                confirm_password:{
+                required:true,
+                minlength:6,
+                equalTo : "#id_password"
+            },
+          },
+
+
+    messages :{
+                first_name:{
+                        minlength:'Minimum 2 charecter required'
+                        },
+                last_name:{
+                        minlength:'Minimum 2 charecter required'
+                },
+                mobile:{
+                  minlength:'Required 10 digits',
+                  maxlength:'Only 10 digits required', 
+                },
+                password:{
+                  minlength : 'Password should contain 6 charecters'
+                },
+                confirm_password:{
+                   minlength : 'Password should contain 6 charecters',
+                   equalTo :'Password does not match'
+                },
+              }
+  })
+})
+
+
+</script>
+
+
 
 </body>
 

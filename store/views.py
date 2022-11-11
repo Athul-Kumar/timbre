@@ -1,3 +1,4 @@
+from django.views.decorators.cache import never_cache
 from unicodedata import category
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -8,6 +9,8 @@ from  .models import Product
 
 
 
+
+@never_cache
 def store(request, category_slug=None):
     categories = None
     products = None
@@ -24,6 +27,8 @@ def store(request, category_slug=None):
     return render(request, 'store/store.html', context)
 
 
+
+@never_cache
 def product_detail(request, category_slug, product_slug):
 
     try:
@@ -40,3 +45,4 @@ def product_detail(request, category_slug, product_slug):
 
     }
     return render(request, 'store/product_detail.html', context)
+

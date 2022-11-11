@@ -5,7 +5,7 @@ from carts.models import Cartitem
 from store.models import Product
 from .models import Order, Payment, OrderProduct, Address, Coupon, UserCoupon
 from .forms import OrderForm
-
+from django.contrib.auth.decorators import login_required
 import razorpay
 import datetime
 import json
@@ -73,7 +73,7 @@ def payments(request):
    return JsonResponse(data)
 
 
-
+@login_required(login_url='login')
 def order_complete(request):
    order_number = request.GET.get('order_number')
    transID  = request.GET.get('transID')
@@ -83,22 +83,26 @@ def order_complete(request):
       order = Order.objects.get(order_number=order_number, is_ordered= True)
       ordered_products = OrderProduct.objects.filter(order_id = order)
 
+      subtotal = 0
+      for i in ordered_products:
+         subtotal += i.product_price * i.quantity
       context = {
          'order' :   order,
          'ordered_products' : ordered_products,
+         'subtotal' : subtotal,
       }
 
-      return render(request, 'orders/order_complete.html')
+      return render(request, 'orders/order_complete.html', context)
    except (Payment.DoesNotExist, Order.DoesNotExist):
       return redirect('home')
 
 
-
+@login_required(login_url='login')
 def place_order(request, total =0, quantitiy =0):
    print(request.method)
-   # print("Podaaaaaaaaaaaaaaaaaa")
+   
    current_user = request.user
-#    if the cart count <0 then redirect to store
+   # if the cart count <0 then redirect to store
    cart_items = Cartitem.objects.filter(user= current_user)
    cart_count = cart_items.count()
 
@@ -108,7 +112,7 @@ def place_order(request, total =0, quantitiy =0):
    delivery_charge = 0
 
    for cart_item in cart_items:
-      # total  += (cart_item.product_id.product_max_price * cart_item.quantitiy)
+      
       total  += int(cart_item.product_id.offer_price())*int(cart_item.quantitiy)
       quantitiy+= cart_item.quantitiy
     
@@ -120,7 +124,7 @@ def place_order(request, total =0, quantitiy =0):
       # if form.is_valid():
          id = request.POST['flexRadioDefault']
          address  = Address.objects.get(user = request.user,id = id)
-         # print("Nokkiiiiiii")
+         
         #  store all the billing information inside order table
 
          data = Order()
@@ -140,7 +144,7 @@ def place_order(request, total =0, quantitiy =0):
          data.ip = request.META.get('REMOTE_ADDR')
          data.save()
          #  generate order Number
-         # print("pwoli sathanam")
+        
          yr = int(datetime.date.today().strftime('%Y'))
          dt = int(datetime.date.today().strftime('%d'))
          mt = int(datetime.date.today().strftime('%m'))
@@ -186,14 +190,13 @@ def place_order(request, total =0, quantitiy =0):
  
  
 
-
+@login_required(login_url='login')
 
 def cash_on_delivery(request, id):
     # Move cart item to orderd product table
-   
-   #  print("ippo kittum")
+  
     try:
-      #   print("Niokki irunno")
+   
         order = Order.objects.get(user = request.user, is_ordered = False, order_number = id)
         print(order)
         cart_items = Cartitem.objects.filter(user = request.user)
@@ -206,7 +209,7 @@ def cash_on_delivery(request, id):
             amount_paid = order.order_total,
             status = False
         )
-      #   print("ayyedaaa mone")
+      
         payment.save()
         order.payment = payment
         order.is_ordered = True
@@ -233,18 +236,18 @@ def cash_on_delivery(request, id):
             'orders':order,
             'payment':payment
              }
-            # print("ittech podaaaa")
+            
             return render(request,'orders/cash-delivery-success.html',context)
     except Exception as e:
         print(e)
-      #   print("ayye patticheeeee")
+    
         return redirect('home')
 
 
 
 
 #  RazorPay
-
+@login_required(login_url='login')
 def razor_pay(request):
         DATA = {
             "amount": 100,
@@ -266,7 +269,7 @@ def razor_pay(request):
 
 
 #order management
-
+@login_required(login_url='login')
 def user_orders(request):
     orders = Order.objects.filter(user = request.user.id, is_ordered = True).order_by('-created_at') 
     paginator = Paginator(orders, 8)
@@ -280,7 +283,7 @@ def user_orders(request):
 
 
 
-
+@login_required(login_url='login')
 def cancel_order(request,id):
     order = Order.objects.get(order_number = id,user = request.user)
     order.status = "Order cancelled"
@@ -289,6 +292,7 @@ def cancel_order(request,id):
     payment.delete()
     return redirect('user_orders')
 
+@login_required(login_url='login')
 def return_order(request,id):
     order = Order.objects.get(order_number = id,user = request.user)
     order.status = "Returned"
@@ -301,37 +305,38 @@ def return_order(request,id):
     payment.delete()
     return redirect('user_orders')
 
+@login_required(login_url='login')
 def invoice_download(request,id):
-   # print("invoice ippo kittumm")
-   # try:
-   #      if request.method == 'POST':
-   #          order = Order.objects.get(user = request.user,id = id)
-   #          ordered_products = OrderProduct.objects.filter(order_id=order.id)
+   print("invoice ippo kittumm")
+   try:
+        if request.method == 'POST':
+            order = Order.objects.get(user = request.user,id = id)
+            ordered_products = OrderProduct.objects.filter(order_id=order.id)
 
-   #          subtotal = 0
-   #          for i in ordered_products:
-   #              subtotal += i.product.sub(request) * i.quantity
+            subtotal = 0
+            for i in ordered_products:
+                subtotal += i.product_id.sub(request) * i.quantity
 
-   #          payment = Payment.objects.get(order_number=order.order_number)
+            payment = Payment.objects.get(order_number=order.order_number)
 
-   #          context = {
-   #              'order': order,
-   #              'ordered_products': ordered_products,
-   #              'order_number': order.order_number,
-   #              'transID': payment.payment_id,
-   #              'payment': payment,
-   #              'subtotal': subtotal,
-   #          }
-   return render(request, 'accounts/dashboard/invoice_download.html' )
-   #      else:
-   #          print("invoice kittiyillaaa")
-   #          return redirect('home')
-   # except:
-   #      print("ippo kittilla")
-   #      return redirect('home')
+            context = {
+                'order': order,
+                'ordered_products': ordered_products,
+                'order_number': order.order_number,
+                'transID': payment.payment_id,
+                'payment': payment,
+                'subtotal': subtotal,
+            }
+            return render(request, 'accounts/dashboard/invoice_download.html',context )
+        else:
+            print("invoice kittiyillaaa")
+            return redirect('home')
+   except:
+        print("ippo kittilla")
+        return redirect('home')
 
 
-
+@login_required(login_url='login')
 def coupon(request):
    #  print("coupon kittiyillo")
     if request.method == 'POST':

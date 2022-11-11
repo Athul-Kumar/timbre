@@ -1,3 +1,4 @@
+
 from logging import exception
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -62,6 +63,8 @@ def add_cart(request, product_id):
 
 
 def cart(request, total =0, quantitiy=0, cart_items=None):
+    # print("enthupattiramana")
+    print(request)
     delivery_charge = 0
     grand_total  =0
     try:
@@ -80,6 +83,7 @@ def cart(request, total =0, quantitiy=0, cart_items=None):
         grand_total = total + delivery_charge
 
     except ObjectDoesNotExist:
+        
         pass
 
     context = {
@@ -89,12 +93,13 @@ def cart(request, total =0, quantitiy=0, cart_items=None):
         'grand_total': grand_total,
         'delivery_charge': delivery_charge
     }
-    
+    # print("mappu developer")
     return render(request, 'store/cart.html', context)
 
 
 def remove_cart(request, product_id):
-
+    # print("malare")
+    # print(product_id)
     product = get_object_or_404(Product, id= product_id)
 
     try:
@@ -111,10 +116,11 @@ def remove_cart(request, product_id):
             cart_item.delete()
     except:
         pass
+    # print("arrada naari nee")
     return redirect('cart')
 
 def  delete_cart(request, product_id):
-    print(product_id)
+    # print(product_id)
     product = get_object_or_404(Product, id=product_id)
     if request.user.is_authenticated:
         cart_item = Cartitem.objects.filter(product_id=product, user = request.user)

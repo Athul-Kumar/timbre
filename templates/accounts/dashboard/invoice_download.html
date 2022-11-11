@@ -39,7 +39,7 @@
                                     <ul class="list-unstyled mb0">
                                         <li><strong>Order</strong> {{order_number}}</li>
                                         <li><strong>Order Date:</strong> {{order.created_at}}</li>
-                                        <li><strong>Status:</strong> {{payment.status}}</li>
+                                        {% comment %} <li><strong>Status:</strong> {{payment.status}}</li> {% endcomment %}
                                     </ul>
                                 </div>
                             </div>
@@ -73,10 +73,10 @@
                                         <tbody >
                                             {% for item in ordered_products %}
                                             <tr >
-                                                <td style="border:1px solid black" >{{item.product.product_name}}
+                                                <td style="border:1px solid black" >{{item.product_id.product_name}}
                                                 </td>
                                                 <td class="text-center" style="border:1px solid black">{{item.quantity}}</td>
-                                                <td class="text-center" style="border:1px solid black">₹{{item.product.offer_price}} </td>
+                                                <td class="text-center" style="border:1px solid black">₹{{item.product_id.offer_price}} </td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
@@ -118,9 +118,14 @@
 
 
 
-<script src="{% static 'assets/js/main.js' %}"></script>
+{% comment %} <script src="{% static 'assets/js/main.js' %}"></script> {% endcomment %}
+<script src="{% static 'Timbre/js/jquery/jquery-2.2.4.min.js' %}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
     <script type="text/javascript">
+        console.log("Keriii")
         $("body").on("click", "#btnExport", function () {
+            console.log("stage1")
             html2canvas($('#invoice')[0], {
                 onrendered: function (canvas) {
                     var data = canvas.toDataURL();

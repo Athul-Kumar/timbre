@@ -51,7 +51,7 @@
                             </div>
                             <div class="profile-name">
                                 <h5 class="mb-0 font-weight-normal">Hi, </h5>
-                                <span>Admin</span>
+                                <span>{{user.first_name}}</span>
                             </div>
                         </div>
 
@@ -155,7 +155,7 @@
         <div class="container-fluid page-body-wrapper">
             <nav class="navbar p-0 fixed-top d-flex flex-row">
 
-                <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                {% comment %} <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
 
                     <ul class="navbar-nav navbar-nav-right">
 
@@ -189,7 +189,7 @@
                         data-toggle="offcanvas">
                         <span class="mdi mdi-format-line-spacing"></span>
                     </button>
-                </div>
+                </div> {% endcomment %}
             </nav>
             <div class="main-panel">
                 <div class="content-wrapper">

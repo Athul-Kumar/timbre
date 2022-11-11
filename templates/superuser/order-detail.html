@@ -187,4 +187,31 @@ text-light
 </table>
 
 
+
+  <!-- pagination -->
+  <br><br>
+  <!-- {{userlist}}<br>
+  Has Previous: {{userlist.has_previous}}<br>
+  Has Next: {{userlist.has_next}}<br>
+  Current Page : {{userlist.number}}<br>
+  Number of pages: {{userlist.paginator.num_pages}}<br>
+  <hr><br><br> -->
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+      
+  {% if orders.has_previous %}
+      <li class="page-item"><a class="page-link btn-danger"  href="?page=1">&laquo First</a></li>
+      <li class="page-item"><a class="page-link btn-danger"  href="?page={{ orders.previous_page_number }}"> previous</a></li>
+  {%endif%}
+   <li class="page-item disabled"><a href="#" class="page-link badge-danger" > Page {{orders.number}} of {{orders.paginator.num_pages}}</a></li>
+  {% if orders.has_next %}
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{orders.next_page_number}}">Next</a></li>
+     <li class="page-item"><a class="page-link btn-danger"  href="?page={{orders.paginatior.num_pages }}">Last &raquo</a></li>
+  {% endif%}
+
+  </ul>
+</nav>
+
+
 {% endblock %}

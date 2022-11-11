@@ -91,6 +91,90 @@
 </div>
 </div>
 
+
+
+<script src="{% static 'Timbre/js/jquery/jquery-2.2.4.min.js' %}"></script>
+<script src= "https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"> </script>
+<script>
+  $(document).ready(function(){
+  $("#address_form").validate({
+    rules:{
+          first_name:{
+                        required:true,
+                        minlength:2
+                        }, 
+          last_name:{
+            required:false,
+            minlength:2
+                },
+            
+                phone:{
+                  required: true,
+                  number: true,
+                  minlength:10,
+                  maxlength:10, 
+                },
+
+            address_line_1:{
+            required: true,
+            minlength:4
+            },
+
+            address_line_2:{
+            required: true,
+            minlength:4
+            },
+
+            city:{
+                requried: true,
+                minlength: 2
+
+            },
+            state:{
+                required: true,
+                minlength: 2
+            },
+            country:{
+                required: true,
+                minlength: 2
+            },
+
+          },
+
+
+    messages :{
+                first_name:{
+                        minlength:'Minimum 2 charecter required'
+                        },
+                last_name:{
+                        minlength:'Minimum 2 charecter required'
+                },
+                phone:{
+                  minlength:'Required 10 digits',
+                  maxlength:'Only 10 digits required', 
+                },
+                address_line_1:{
+                    minlength:'Minimum 4 character required'
+                },
+                address_line_2:{
+                    minlength:'Minimum 4 character required'
+                },
+                city:{
+                    minlength:'Minimum 2 character required'
+                },  
+                state:{
+                    minlength:'Minimum 2 character required'
+                },
+                country:{
+                    minlength:'Minimum 2 character required'
+                }
+              }
+  })
+})
+
+
+</script>
+
 {% endblock %}
 
 

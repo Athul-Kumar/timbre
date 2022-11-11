@@ -17,16 +17,98 @@ Dashboard
 
 {% block maincontent %}
 
-<div class="row">
+ <div class="row">
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">{{order_count_in_month}}</h3>
+                          {% comment %} <p class="text-success ms-2 mb-0 font-weight-medium">+3.5%</p> {% endcomment %}
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">This month's Orders</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">{{order_count_in_week  }}</h3>
+                          {% comment %} <p class="text-success ms-2 mb-0 font-weight-medium">+11%</p> {% endcomment %}
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-success">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">This week's Order</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">{{order_count_in_today}}</h3>
+                          {% comment %} <p class="text-danger ms-2 mb-0 font-weight-medium">-2.4%</p> {% endcomment %}
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-danger">
+                          <span class="mdi mdi-arrow-bottom-left icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Today's Orders</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-9">
+                        <div class="d-flex align-items-center align-self-start">
+                          <h3 class="mb-0">{{ number_of_users}}</h3>
+                          {% comment %} <p class="text-success ms-2 mb-0 font-weight-medium">+3.5%</p> {% endcomment %}
+                        </div>
+                      </div>
+                      <div class="col-3">
+                        <div class="icon icon-box-success ">
+                          <span class="mdi mdi-arrow-top-right icon-item"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <h6 class="text-muted font-weight-normal">Number of Users</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-    {% comment %} <div class="col-lg-6 grid-margin stretch-card">
+<div class="row">
+   <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Line chart</h4>
                 <canvas id="lineChart" style="height:250px"></canvas>
             </div>
         </div>
-    </div> {% endcomment %}
+    </div>
     <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
@@ -35,18 +117,18 @@ Dashboard
             </div>
         </div>
     </div>
-{% comment %} </div>
+ </div>
 
 
-<div class="row"> {% endcomment %}
-    {% comment %} <div class="col-lg-6 grid-margin stretch-card">
+<div class="row">
+     <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Pie chart</h4>
                 <canvas id="pieChart" style="height:250px"></canvas>
             </div>
         </div>
-    </div> {% endcomment %}
+    </div> 
 
     <div class="col-lg-6 grid-margin stretch-card">
         <div class="card">
@@ -74,14 +156,7 @@ Dashboard
     var cod = "{{cod}}"
     var razor = "{{razor}}"
     var paypal = "{{paypal}}"
-    var count1 = "{{count1}}"
-    var count2 = "{{count2}}"
-    var count3 = "{{count3}}"
-    var count4 = "{{count4}}"
-    var name1 = "{{name1}}"
-    var name2 = "{{name2}}"
-    var name3 = "{{name3}}"
-    var name4 = "{{name4}}"
+    
 
     //  console.log(diff);
     var data = {
@@ -117,10 +192,10 @@ Dashboard
 
     var datas = {
 
-      labels: ["{{day_3_name}}", "{{day_2_name}}", "{{yesterday}}","{{today}}"],
+      labels: ["{{day_5_name}}", "{{day_4_name}}", "{{day_3_name}}", "{{day_2_name}}", "{{yesterday}}","{{today}}"],
       datasets: [{
         label: 'Total order',
-        data: ["{{day_3}}", "{{day_2}}", "{{yester_day_sale}}", "{{today_sale}}"],
+        data: ['{{day_5}}', '{{day_4}}', '{{day_3}}', '{{day_2}}', '{{yester_day_sale}}', '{{today_sale}}'],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -237,12 +312,12 @@ Dashboard
     };
 
 
-    var confirmed = "{{confirmed}}"
-    var canc_return = "{{canc_return}}"
+    var blocked_user = "{{blocked_user}}"
+    var unblockd_user = "{{unblockd_user}}" 
 
     var doughnutPieDatas = {
       datasets: [{
-        data: [confirmed, canc_return],
+        data: [blocked_user, unblockd_user],
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(54, 162, 235, 0.5)',
@@ -263,7 +338,7 @@ Dashboard
 
       // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: [
-        "Delivered", "Return/cancelled"
+        "Blocked", "Unblocked"
       ]
     };
     var doughnutPieOptionss = {

@@ -1,3 +1,4 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from itertools import product
 from multiprocessing import context
 from django.shortcuts import render,redirect
@@ -20,6 +21,7 @@ from category.views import category
 from orders.models import Coupon
 from orders.forms import CouponForm
 import datetime
+from datetime import date
 from datetime import datetime,timedelta,date
 from django.db.models import Sum,Q
 
@@ -30,9 +32,6 @@ from django.db.models import Sum,Q
 
 
 def admin_login(request):
-    if request.user.is_authenticated:
-        return redirect('dashboard')
-
     if request.method =='POST':
         email = request.POST.get('email')
         password= request.POST.get('password')
@@ -51,10 +50,23 @@ def admin_login(request):
     return render(request, 'superuser/login.html')
 
 
-
+@staff_member_required(login_url='admin_login')
 def admin_home(request):
-# product status
 
+    today = datetime.today()
+    today_date = today.strftime("%Y-%m-%d")
+    month = today.month
+    year = today.strftime("%Y")
+    one_week = datetime.today() - timedelta(days=7)
+    order_count_in_month = Order.objects.filter(created_at__year = year,created_at__month=month).count() 
+    order_count_in_week = Order.objects.filter(created_at__gte = one_week).count()
+    order_count_in_today = Order.objects.filter(created_at__date= today).count()
+    number_of_users = Account.objects.filter(is_admin= False).count()
+# users
+    
+    blocked_user = Account.objects.filter(is_active = False, is_admin=False).count()
+    unblockd_user = Account.objects.filter(is_active = True, is_admin=False).count()
+# product status
     order_confirmed = Order.objects.filter(status='Order confirmed').count()
     shipped = Order.objects.filter(status = 'Shipped').count()
     out_of_delivery = Order.objects.filter(status = 'Out for Delivery').count()
@@ -62,8 +74,32 @@ def admin_home(request):
     Cod = Payment.objects.filter(payment_method = 'Cash On Delivery', status = False).count()
     payPal = Payment.objects.filter(payment_method = 'PayPal').count()
     Razorpay = Payment.objects.filter(payment_method = 'RazerPay').count()
-    print(Cod, payPal, Razorpay)
+#   sales per days
+    today_sale = Order.objects.filter(created_at__date = today_date,payment__status = True).count()
+    today = today.strftime("%A")
+    new_date = datetime.today() - timedelta(days = 1)
+    yester_day_sale =   Order.objects.filter(created_at__date = new_date,payment__status = True).count()  
+    yesterday = new_date.strftime("%A")
+    new_date = new_date - timedelta(days = 1)
+    day_2 = Order.objects.filter(created_at__date = new_date,payment__status = True).count()
+    day_2_name = new_date.strftime("%A")
+    new_date = new_date - timedelta(days = 1)
+    day_3 = Order.objects.filter(created_at__date = new_date,payment__status = True).count()
+    day_3_name = new_date.strftime("%A")
+    new_date = new_date - timedelta(days = 1)
+    day_4 = Order.objects.filter(created_at__date = new_date,payment__status = True).count()
+    day_4_name = new_date.strftime("%A")
+    new_date = new_date - timedelta(days = 1)
+    day_5 = Order.objects.filter(created_at__date = new_date,payment__status = True).count()
+    day_5_name = new_date.strftime("%A")
+    # print(Cod, payPal, Razorpay)
     context ={
+        'order_count_in_month': order_count_in_month,
+        'order_count_in_week': order_count_in_week,
+        'order_count_in_today': order_count_in_today,
+        'number_of_users': number_of_users,
+        'blocked_user': blocked_user,
+        'unblockd_user':unblockd_user,
         'order_confirmed': order_confirmed,
         'shipped': shipped,
         'out_of_delivery': out_of_delivery,
@@ -71,6 +107,16 @@ def admin_home(request):
         'Cod': Cod,
         'payPal': payPal,
         'RazorPay': Razorpay,
+        'today_sale':today_sale,
+        'yester_day_sale':yester_day_sale,
+        'day_2':day_2,
+        'today':today,
+        'yesterday':yesterday,
+        'day_2_name':day_2_name,
+        'day_3_name':day_3_name,
+        'day_4_name':day_4_name,
+        'day_5_name':day_5_name
+        
 
     }
 
@@ -78,7 +124,7 @@ def admin_home(request):
 
 
 
-@login_required(login_url= 'admin_login')
+@staff_member_required(login_url='admin_login')
 def admin_logout(request):
     auth.logout(request)
     return redirect('admin_login')
@@ -86,7 +132,7 @@ def admin_logout(request):
 
 
 # admin user side
-
+@staff_member_required(login_url='admin_login')
 def userlist(request):
     users = Account.objects.filter(is_admin=False, is_verified=True)
     form= UserForm()
@@ -105,7 +151,7 @@ def userlist(request):
     return render(request, 'superuser/userlist.html', context)
 
 
-
+@staff_member_required(login_url='admin_login')
 def userblock(request,id,flag):
     if request.method == 'POST':
         customer= Account.objects.get(id = id)
@@ -138,7 +184,7 @@ def userblock(request,id,flag):
 
 
 #  Admin category
-
+@staff_member_required(login_url='admin_login')
 def admin_category(request):
     categories = Category.objects.all()
     form = CategoryForm()
@@ -157,7 +203,7 @@ def admin_category(request):
 
     return render(request, 'superuser/categorylist.html', context)
 
-
+@staff_member_required(login_url='admin_login')
 def admin_category_add(request):
     # print("Category Enter")
     if request.method == 'POST':
@@ -181,7 +227,7 @@ def admin_category_add(request):
     return render(request, 'superuser/category-add.html', context)
 
 
-
+@staff_member_required(login_url='admin_login')
 def admin_category_delete(request, id):
     if request.method =='POST':
         category_id = Category.objects.get(pk=id)
@@ -189,7 +235,7 @@ def admin_category_delete(request, id):
     return redirect('categorylist')
 
 # Admin Products
-
+@staff_member_required(login_url='admin_login')
 def admin_productlist(request):
 
     productlist = Product.objects.all()
@@ -207,7 +253,7 @@ def admin_productlist(request):
     }
     return render(request, 'superuser/productlist.html', context)
 
-
+@staff_member_required(login_url='admin_login')
 def admin_product_add(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
@@ -229,6 +275,7 @@ def admin_product_add(request):
     
     return render(request, 'superuser/product-add.html', context)
 
+@staff_member_required(login_url='admin_login')
 def admin_product_delete(request, id):
     if request.method == 'POST':
         product_id = Product.objects.get(pk=id)
@@ -257,6 +304,7 @@ def admin_product_delete(request, id):
 
 # Admin Brans
 
+@staff_member_required(login_url='admin_login')
 def admin_brandlist(request):
 
     brandlist = Brandinfo.objects.all()
@@ -274,14 +322,14 @@ def admin_brandlist(request):
 
     return render(request, 'superuser/brandlist.html', context)
 
-
+@staff_member_required(login_url='admin_login')
 def admin_brand_delete(request, id):
     if request.method =='POST':
         brand_id = Brandinfo.objects.get(pk=id)
         brand_id.delete()
     return redirect('brandlist')
 
-
+@staff_member_required(login_url='admin_login')
 def admin_brand_add(request):
     if request.method == 'POST':
         form = BrandForm(request.POST, request.FILES)
@@ -303,7 +351,7 @@ def admin_brand_add(request):
     return render(request, 'superuser/brand-add.html', context)
 
 
-
+@staff_member_required(login_url='admin_login')
 def admin_orderlist(request):
     # print("enthada")
     if 'key' in request.GET:
@@ -329,6 +377,7 @@ def admin_orderlist(request):
     }
     return render(request, 'superuser/order-detail.html',context)
 
+@staff_member_required(login_url='admin_login')
 def admin_order_update(request, id):
     if request.method == 'POST':
         instance = get_object_or_404(Order, id=id)
@@ -340,7 +389,7 @@ def admin_order_update(request, id):
 
 
 #  AdminCoupon Section
-
+@staff_member_required(login_url='admin_login')
 def admin_display_coupon(request):
     if 'query' in request.GET:
         query = request.GET.get('query')
@@ -363,7 +412,7 @@ def admin_display_coupon(request):
     return render(request, 'superuser/coupon-list.html', context)
 
 
-
+@staff_member_required(login_url='admin_login')
 def admin_add_coupon(request):
     if request.method == 'POST':
         form = CouponForm(request.POST , request.FILES)
@@ -375,13 +424,15 @@ def admin_add_coupon(request):
             messages.error(request, 'Coupon with this code already exists !')
             return redirect(admin_display_coupon)
     form = CouponForm()
-    today_date=str(datetime.date.today())
+    today_date=str(date.today())
     context = { 
         'form':form,
         'today_date': today_date
     }
     return render(request,'superuser/add-coupon.html',context)
 
+
+@staff_member_required(login_url='admin_login')
 def coupon_delete(request,id):
     print("delte")
     if request.method == 'POST' :
@@ -390,7 +441,7 @@ def coupon_delete(request,id):
         messages.error(request, 'Coupon deleted successfully')
     return redirect(admin_display_coupon)
 
-
+@staff_member_required(login_url='admin_login')
 def coupon_update(request, id) :
     category = Coupon.objects.get(id=id)
     if request.method == 'POST' :
@@ -407,8 +458,7 @@ def coupon_update(request, id) :
 
 
 
-
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def category_offer(request):
     if 'query' in request.GET:
         query = request.GET.get('query')
@@ -430,7 +480,7 @@ def category_offer(request):
 
     return render(request,'superuser/category-offer.html',context)
 
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def add_category_offer(request):
     if request.method == 'POST' :
         category_name = request.POST.get('category_name')
@@ -441,7 +491,7 @@ def add_category_offer(request):
         messages.success(request,'Added Category offer success fully')
         return redirect('category_offer')
         
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def category_offer_delete(request,id):
     if request.method == 'POST' :
         category = Category.objects.get(id = id)
@@ -452,7 +502,7 @@ def category_offer_delete(request,id):
         
 
 
-
+@staff_member_required(login_url='admin_login')
 def product_offer(request):
     if 'query' in request.GET:
         query = request.GET.get('query')
@@ -473,7 +523,7 @@ def product_offer(request):
     }
     return render(request,'superuser/product-offer.html',context)
 
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def add_product_offer(request):
     if request.method == 'POST' :
         product_name = request.POST.get('product_name')
@@ -484,7 +534,7 @@ def add_product_offer(request):
         messages.success(request,'Added product offer success fully')
         return redirect('product_offer')
 
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def product_offer_delete(request,id):
     if request.method == 'POST' :
         product = Product.objects.get(id = id)
@@ -496,8 +546,7 @@ def product_offer_delete(request,id):
 
 #  sales report
 
-
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def sales_report(request):
     year = datetime.now().year
     today = datetime.today()
@@ -529,7 +578,7 @@ def sales_report(request):
     return render(request,'superuser/salesreport.html',context)
       
 
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def sales_report_month(request,id):
     print("reached")
     orders = Order.objects.filter(created_at__month = id,payment__status = True).values('user_order_page__product_id__product_name','user_order_page__product_id__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
@@ -545,7 +594,7 @@ def sales_report_month(request,id):
 
 
 
-# @staff_member_required(login_url='admin_login')
+@staff_member_required(login_url='admin_login')
 def sales_report_year(request,id):
     orders = Order.objects.filter(created_at__year = id,payment__status = True).values('user_order_page__product_id__product_name','user_order_page__product_id__stock',total = Sum('order_total'),).annotate(dcount=Sum('user_order_page__quantity')).order_by()    
     today_date=str(date.today())

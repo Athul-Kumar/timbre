@@ -1,4 +1,6 @@
+
 {% extends 'superuser/adminbase.html' %}
+{% load static %}
 {% load widget_tweaks %}
 
 {% block productclass %}
@@ -32,7 +34,7 @@ text-light
             </div>
             <div class="form-group">
                 <label for="">Category_id</label>
-                {% render_field form.category_id placeholder="Category Id" class="form-control" id="category_id"  %}
+                {% render_field form.category_id placeholder="Category Id" class="form-control text-white" id="category_id"  %}
             </div>
             <div class="form-group">
                 <label for="">description</label>
@@ -56,23 +58,23 @@ text-light
             </div>
              <div class="form-group">
                 <label for="">Main Image</label>
-                {% render_field form.pro_images  placeholder="Image" class="form-control" %}
+                {% render_field form.pro_images  placeholder="Image" class="form-control"  id="image" %}
             </div>
             <div class="form-group">
                 <label for="">Sub-images</label>
-                {% render_field form.pro_image_1  placeholder="Image" class="form-control" %}
+                {% render_field form.pro_image_1  placeholder="Image" class="form-control"  id="image"%}
             </div>
             <div class="form-group">
                 <label for="">Sub-images</label>
-                {% render_field form.pro_image_2  placeholder="Image" class="form-control" %}
+                {% render_field form.pro_image_2  placeholder="Image" class="form-control"  id="image" %}
             </div>
              <div class="form-group">
                 <label for="">Sub-images</label>
-                {% render_field form.pro_image_3  placeholder="Image" class="form-control" %}
+                {% render_field form.pro_image_3  placeholder="Image" class="form-control"  id="image" %}
             </div>
              <div class="form-group">
                 <label for="">Sub-images</label>
-                {% render_field form.pro_image_4  placeholder="Image" class="form-control" %}
+                {% render_field form.pro_image_4  placeholder="Image" class="form-control"  id="image" %}
             </div>
             <div class="form-group">
                 <label for="">No. of stock</label>
@@ -97,67 +99,32 @@ text-light
            </div> 
             <button class="btn btn-success btn-rounded" type="submit">Submit</button>
            </div>
+            
     
             
         </form>
     </div>
 
 </div>
+<script src="{% static 'Adminpanel/js/cropper.js' %}"></script>
 
-<script>
-        function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-            $('#blah').attr('src', e.target.result)
-            };
-            reader.readAsDataURL(input.files[0]);
-            setTimeout(initCropper, 1000);
-        }
-        }
-        function initCropper(){
-        console.log("Came here")
-        var image = document.getElementById('blah');
-        var cropper = new Cropper(image, {
-            aspectRatio: 16 / 9,
-            crop: function(e) {
-            console.log(e.detail.x);
-            console.log(e.detail.y);
-            }
-        });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" integrity="sha512-ooSWpxJsiXe6t4+PPjCgYmVfr1NS5QXJACcR/FPpsdm6kqG1FmQ2SVyg2RXeVuCRBLr0lWHnWJP6Zs1Efvxzww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-        // On crop button clicked
-        document.getElementById('crop_button').addEventListener('click', function(){
-            var imgurl =  cropper.getCroppedCanvas().toDataURL();
-            var img = document.createElement("img");
-            img.src = imgurl;
-            document.getElementById("cropped_result").appendChild(img);
+// import 'cropperjs/dist/cropper.css';
+import Cropper from 'cropperjs';
 
-            /* ---------------- SEND IMAGE TO THE SERVER-------------------------
-
-                        cropper.getCroppedCanvas().toBlob(function (blob) {
-                            var formData = new FormData();
-                            formData.append('croppedImage', blob);
-                            // Use `jQuery.ajax` method
-                            $.ajax('/path/to/upload', {
-                                method: "POST",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                success: function () {
-                                console.log('Upload success');
-                                },
-                                error: function () {
-                                console.log('Upload error');
-                                }
-                            });
-                        });
-                    ----------------------------------------------------*/
-        })
-        }
-
-</script>
-
-
+const image = document.getElementById('image');
+const cropper = new Cropper(image, {
+  aspectRatio: 16 / 9,
+  crop(event) {
+    console.log(event.detail.x);
+    console.log(event.detail.y);
+    console.log(event.detail.width);
+    console.log(event.detail.height);
+    console.log(event.detail.rotate);
+    console.log(event.detail.scaleX);
+    console.log(event.detail.scaleY);
+  },
+});
 
 {% endblock %}

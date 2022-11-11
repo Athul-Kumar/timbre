@@ -6,7 +6,10 @@
 
 {% block content %}
 
-<div class="cart_area section_padding_100 clearfix">
+  
+
+
+<div class="cart_area section_padding_100 clearfix " id="cart-table">
   <div class="container">
     {% if not cart_items %}
     <h2 class="text-center">Your shopping cart is Empty</h2>
@@ -17,7 +20,7 @@
     </div>
 
     {% else %}
-    <div class="row" >
+    <div class="row">
         <div class="col-12" >
           <div class="cart-table clearfix">
             <table class="table table-responsive">
@@ -55,48 +58,56 @@
                     <span>{{cart_item.product_id.offer_price}}</span>
                   </td>
                   {% endif %}
-                  <td class="qty">
-                    <div class="quantity">
-
-                      <span class="qty-minus">
-                        <a href="{% url 'remove_cart' cart_item.product_id.id %} "> 
-                          <i class="fa fa-minus" aria-hidden="true"></i>
-                        </a>
-                      </span>
-                      <input
-                        type="number"
-                        class="qty-text"
-                        id="qty"
-                        step="1"
-                        min="1"
-                        max="99"
-                        name="quantity" 
-                        value="{{cart_item.quantitiy}}"
-                        disabled
-                      />
-                      <span class="qty-plus">
-                        <a href="{% url 'add_cart' cart_item.product_id.id %}">
-                          <i class="fa fa-plus" aria-hidden="true"></i
-                        ></a>
-                      </span>
-                    </div>
-                  </td>
-                  
-                  <td class="total_price">
-                    <span>{{ cart_item.sub_total }}</span>
-                  </td>
-                  
-                  <td>
-                     {% comment %} <a
-                      href="{% url 'delete_cart' cart_item.product_id.id %}"
-                      class="btn btn-danger btn-rounded"
-                      >Remove</a
-                    >  {% endcomment %}
-                        <!-- Button trigger modal -->
-                     <button type="button" class="btn btn-danger btn-rounded" data-toggle="modal" data-target="#exampleModal{{cart_item.id}}">
-                      Remove
-                    </button>
-                  </td>
+                  {% comment %} {% include 'store/cart-function.html' %} {% endcomment %}
+                                      
+                    <td class="qty" >
+                        <div class="quantity product-data">
+                        
+                           <span class="qty-minus">
+                            <a href="{% url 'remove_cart' cart_item.product_id.id %}" class="decrement-btn">
+                              {% comment %} <a  
+                              hx-get="{% url 'remove_cart' cart_item.product_id.id %} " 
+                              hx-trigger="click"
+                              hx-target="#cart-table"
+                              hx-swap="innerHTML"
+                              
+                              >  {% endcomment %}
+                             <i class="fa fa-minus" aria-hidden="true"  ></i>
+                            </a>
+                            </span> 
+                            <input
+                            type="number"
+                            class="qty-text"
+                            id="qty"
+                            step="1"
+                            min="1"
+                            max="99"
+                            name="quantity" 
+                            value="{{cart_item.quantitiy}}"
+                            disabled
+                            />
+                            <span class="qty-plus">
+                            <a href="{% url 'add_cart' cart_item.product_id.id %}">
+                                <i class="fa fa-plus" aria-hidden="true"></i
+                            ></a>
+                            </span>
+                        </div>
+                        </td>
+                        
+                        <td class="total_price">
+                        <span>{{ cart_item.sub_total }}</span>
+                        </td>
+                    <td>
+                      {% comment %} <a
+                        href="{% url 'delete_cart' cart_item.product_id.id %}"
+                        class="btn btn-danger btn-rounded"
+                        >Remove</a
+                      >  {% endcomment %}
+                          <!-- Button trigger modal -->
+                      <button type="button" class="btn btn-danger btn-rounded" data-toggle="modal" data-target="#exampleModal{{cart_item.id}}">
+                        Remove
+                      </button>
+                    </td>
                             
 
               <!-- Modal -->
@@ -233,6 +244,31 @@
     
   </div>
 </div>
+
+{% comment %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript">
+
+console.log('note')
+$(document).ready(function(){
+  console.log('athul')
+   
+    $('.decrement-btn').click(function (e){
+      e.preventDefault();
+
+      var_inc_value = $(this).closest('.product-data').fined('.qty-text').val();
+      var value = parseInt(inc_value, 10);
+      value = isNan(value) ? 0 : value;
+      if(value < 10)
+      {
+        value--;
+        $(this).closest('.product-data').fined('.qty-text').val(value);
+
+      }
+
+
+    });
+}); {% endcomment %}
 
 
 

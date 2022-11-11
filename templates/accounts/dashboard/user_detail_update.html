@@ -88,85 +88,6 @@
 
 </section> 
 
-{% comment %} 
- <div class="account-dashboard">
-            <div class="container mt-5">
-                
-                <div class="row">
-                    {% include 'accounts/dashboard/dashboard_sidebar.html' %}
-                    <div class="col-sm-12 col-md-9 col-lg-9">
-                        <div class="tab-pane " id="account_update">
-                            <h3 class="text-center">Update Account  </h3>
-
-                            <form action="{% url 'user_detail_update' %}" method="POST" enctype="multipart/form-data" id="account_form">
-                                {% csrf_token %}
-                            <div class="d-flex justify-content-center">
-                                <div class="item">    
-                                        <span class="notify-badge">
-                                            <div class="d-none">
-                                            {% render_field form.profile_image id="file_upload_id"  %}
-                                            </div>
-                                            <img src="{% static 'images/add-icon.png' %}" class="image-fluid" width="44px" height="44px" alt="" onclick="_upload()">
-                                        </span>
-                                        {% if user.profile_image %}
-                                        <img src="{{user.profile_image.url}}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
-                                        {%else%}
-                                        <img src="{% static 'images/user-image.jpg' %}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
-                                        {%endif%}
-                                    <h5 class="mb-2"><strong>{{user.full_name}}</strong></h5>
-                                </div>
-                            </div>
-
-
-
-
-
-
-
-                            <div class="login">
-                                <div class="login_form_container">
-                                    <div class="account_login_form">
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="default-form-box">
-                                                            <label>First Name <span>*</span></label>
-                                                            {% render_field form.first_name required="True" %}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="default-form-box">
-                                                            <label>Last Name <span>*</span></label>
-                                                            {% render_field form.last_name required="True" %}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="default-form-box">
-                                                            <label>Phone<span>*</span></label>
-                                                            {% render_field form.mobile required="True" %}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="default-form-box">
-                                                            <label> Email Address <span>*</span></label>
-                                                             {% render_field form.email required="True" type="email" %}
-                                                        </div>
-                                                    </div>
-                                                    
-                                                
-                                                    <div class="order_button pt-3 mt-2">
-                                                        <button class="btn btn-md btn-black-default-hover" type="submit">Submit</button>
-                                                        </div>
-                                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
- {% endcomment %}
-
  <script>
         function _upload(){
         document.getElementById('file_upload_id').click();
@@ -176,7 +97,8 @@
     </script>
 
 
-<script src="{% static 'js/jquery-form-validation.js' %}"></script>
+<script src="{% static 'Timbre/js/jquery/jquery-2.2.4.min.js' %}"></script>
+<script src= "https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"> </script>
 <script>
   $(document).ready(function(){
   $("#account_form").validate({

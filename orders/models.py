@@ -4,6 +4,7 @@ from django.db import models
 from accounts .models import Account
 from store .models import Product, Brandinfo
 from django.core.validators import MinValueValidator,MaxValueValidator
+import datetime
 # Create your models here.
 # from django.utils.translation import gettext_lazy as _
 

@@ -22,6 +22,7 @@ import requests
 
 # Create your views here.
 def user_register(request):
+   
     if request.method=='POST':
         
         form=RegistrationForm(request.POST)
@@ -44,6 +45,7 @@ def user_register(request):
             send_otp(mobile)
             return redirect(verify_code)
         else:
+            print(form.errors.as_data())
             messages.error(request,"Enter correct data")
             return render(request,'accounts/register.html')
 
@@ -68,6 +70,7 @@ def user_login(request):
         user = auth.authenticate(request,email=email,password=password)
         if user is not None:
             try:
+                print("entered")
                
                 cart = Cart.objects.get(cart_id = _cart_id(request))
                 is_cart_item_exists = Cartitem.objects.filter( cart_id=cart).exists()

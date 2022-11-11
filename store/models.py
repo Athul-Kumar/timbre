@@ -38,8 +38,8 @@ class Product(models.Model):
 
     
     def offer_price(self):
-        print(self.product_max_price)
-        print(self.category_id.category_offer)
+        # print(self.product_max_price)
+        # print(self.category_id.category_offer)
         product_offer = int(self.product_max_price) - int(self.product_max_price) * int(self.product_offer) /100 
         category_offer = int(self.product_max_price) - int(self.product_max_price) * int(self.category_id.category_offer)/100
         if product_offer == int(self.product_max_price) and category_offer == int(self.product_max_price):

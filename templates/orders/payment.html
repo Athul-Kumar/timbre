@@ -260,10 +260,11 @@
     return cookieValue;
     }
 
-{% comment %} 
+ 
   var amount = Number("{{grand_total}}")
-  amount = amount/75   {% endcomment %}
-  var amount = "{{grand_total}}" 
+  amount = amount/75 
+  amount = amount.toFixed(2)
+  {% comment %} var amount = "{{grand_total}}"  {% endcomment %}
   var url = "{% url 'payments' %}"
   var csrftoken = getCookie('csrftoken');
   var orderID = "{{ order.order_number }}"
