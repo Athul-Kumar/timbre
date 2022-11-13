@@ -34,6 +34,7 @@ def product_detail(request, category_slug, product_slug):
     try:
         single_product = Product.objects.get(category_id__slug = category_slug, slug=product_slug)
         in_cart = Cartitem.objects.filter(cart_id__cart_id = _cart_id(request), product_id = single_product).exists()
+      
         
 
     except Exception as e:

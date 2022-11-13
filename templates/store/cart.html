@@ -37,7 +37,7 @@
                 {% for cart_item in cart_items %}
                 <tr>
                   <td class="cart_product_img d-flex align-items-center">
-                    <a href="#"
+                    <a href=""
                       ><img
                         src="{{ cart_item.product_id.pro_images.url}}"
                         alt="Product"
@@ -51,7 +51,7 @@
                   </td>
                     {% if cart_item.product_id.offer_price > 0 %}
                   <td class="price">
-                    <span>{{cart_item.product_id.offer_price}}</span>
+                    <span>₹{{cart_item.product_id.offer_price}}</span>
                   </td>
                   {% else %}
                   <td class="price">
@@ -61,19 +61,22 @@
                   {% comment %} {% include 'store/cart-function.html' %} {% endcomment %}
                                       
                     <td class="qty" >
-                        <div class="quantity product-data">
+                        <div class="quantity">
                         
                            <span class="qty-minus">
-                            <a href="{% url 'remove_cart' cart_item.product_id.id %}" class="decrement-btn">
-                              {% comment %} <a  
-                              hx-get="{% url 'remove_cart' cart_item.product_id.id %} " 
-                              hx-trigger="click"
-                              hx-target="#cart-table"
-                              hx-swap="innerHTML"
-                              
-                              >  {% endcomment %}
+                             <a href="{% url 'remove_cart' cart_item.product_id.id %}" class="decrement-btn">
                              <i class="fa fa-minus" aria-hidden="true"  ></i>
                             </a>
+
+                                 <!-- HTMX -->
+                            <!-- <a hx-get="{% url 'remove_cart' cart_item.product_id.id %}" 
+                               hx-trigger="click" 
+                                hx-target="#target-id" 
+                                hx-swap="innerHTML">
+                             <i class="fa fa-minus" aria-hidden="true"  ></i>
+                            </a>  -->
+                            <!-- hx-get="/api/?action=feed" hx-trigger="load" hx-target="#app" hx-swap="innerHTML" -->
+                             <!-- <button  type="button" style="width: 20px;" class="decrement-btn"><i class="fa fa-minus" aria-hidden="true"  ></i></button>  -->
                             </span> 
                             <input
                             type="number"
@@ -95,7 +98,7 @@
                         </td>
                         
                         <td class="total_price">
-                        <span>{{ cart_item.sub_total }}</span>
+                        <span>₹{{ cart_item.sub_total }}</span>
                         </td>
                     <td>
                       {% comment %} <a
@@ -245,31 +248,40 @@
   </div>
 </div>
 
-{% comment %} 
+ {% comment %} 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script type="text/javascript">
-
-console.log('note')
-$(document).ready(function(){
-  console.log('athul')
-   
+<script>
+  
+  console.log('note')
+  $(document).ready(function(){
+    console.log('athul')
+    
     $('.decrement-btn').click(function (e){
       e.preventDefault();
-
+      console.log("helloda");
+      
       var_inc_value = $(this).closest('.product-data').fined('.qty-text').val();
       var value = parseInt(inc_value, 10);
       value = isNan(value) ? 0 : value;
-      if(value < 10)
+      if(value  > 1)
       {
         value--;
         $(this).closest('.product-data').fined('.qty-text').val(value);
-
+        
       }
-
-
+      
+      
+      
+      
+      
     });
-}); {% endcomment %}
+  }); 
+</script>
+ 
 
+  
+{% endcomment %}
 
+<script src="https://unpkg.com/htmx.org@1.8.4" integrity="sha384-wg5Y/JwF7VxGk4zLsJEcAojRtlVp1FKKdGy1qN+OMtdq72WRvX/EdRdqg/LOhYeV" crossorigin="anonymous"></script>
 
 {% endblock%}

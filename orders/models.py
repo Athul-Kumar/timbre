@@ -25,7 +25,7 @@ class Payment(models.Model):
         return self.payment_id
 
 
-class   Order(models.Model):
+class Order(models.Model):
     STATUS = (
         ('Order confirmed', 'Order confirmed'),
         ('Shipped', 'Shipped'),
@@ -118,7 +118,7 @@ class Address(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=50,unique=True)
-    discount = models.IntegerField(validators = [MinValueValidator(0),MaxValueValidator(20)])
+    discount = models.IntegerField(validators = [MinValueValidator(0),MaxValueValidator(30)])
     min_value = models.IntegerField(validators = [MinValueValidator(0)])
     valid_from = models.DateTimeField(auto_now_add=True)
     valid_at = models.DateField()

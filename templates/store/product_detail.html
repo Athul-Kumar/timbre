@@ -67,7 +67,9 @@ Product details
                 <div class="single_product_desc">
                     <div class= "raw m-4">
                        
-                        <h4 class="title"><a href="#">{{single_product.product_name}}</a></h4>
+
+                        <h6 class="title"><a href="#">{{single_product.brand}}</a></h6>
+                        <h2 class="title"><a href="#">{{single_product.product_name}}</a></h2>
                              {% if single_product.product_offer > 0 %}
                         <h6 class="price"><del>₹ &nbsp {{single_product.product_max_price}}</del></h6>
                         <h4>₹ &nbsp {{single_product.offer_price}}</h4>
@@ -91,26 +93,42 @@ Product details
                         <!-- Add to Cart Form -->
                         {% if single_product.stock <= 0 %}
                          <h5 class="text-danger"> Out of stock </h5>
-                         {% else %}
+                         {% else %} 
                             {% if in_cart %}
-                             <div class="cart clearfix mb-50 d-flex">
+                                <div class="cart clearfix mb-50 d-flex">
 
-                            <a href="#" class="btn btn-success  btn-lg d-block ml-4" >Added to cart</a>
-                            <a href="{% url 'cart' %}" class="btn btn-outline-primary  btn-lg d-block ml-4" >View Cart</a>
+                                    <a href="#" class="btn btn-success  btn-lg d-block ml-4" >Added to cart</a>
+                                    <a href="{% url 'cart' %}" class="btn btn-outline-primary  btn-lg d-block ml-4" >View Cart</a>
+                                </div>
 
                             {% else %}
-                        <div class="cart clearfix mb-50 d-flex">
+                                <div class="cart clearfix mb-50 d-flex">
                             
-                            <a href="{% url 'add_cart' single_product.id %}"   class="btn cart-submit d-block" >Add to Cart</a>
+                                    <a href="{% url 'add_cart' single_product.id %}"   class="btn cart-submit d-block" >Add to Cart</a>
+                                </div>
                             {% endif %}
-                        </div>
+                          
                         {% endif %}
 
                         <div id="accordion" role="tablist">
+                            
+                            <div class="card">
+                                <div class="card-header" role="tab" id="headingTwo">
+                                    <h6 class="mb-0">
+                                        <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">About Product</a>
+                                    </h6>
+                                </div>
+                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>{{single_product.description}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingOne">
                                     <h6 class="mb-0">
-                                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Information</a>
+                                        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Details</a>
                                     </h6>
                                 </div>
 
@@ -120,28 +138,16 @@ Product details
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingTwo">
-                                    <h6 class="mb-0">
-                                        <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Cart Details</a>
-                                    </h6>
-                                </div>
-                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>{{single_product.description}}</p>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="card">
                                 <div class="card-header" role="tab" id="headingThree">
                                     <h6 class="mb-0">
-                                        <a class="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">shipping &amp; Returns</a>
+                                        <a class="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Type &amp; specifications</a>
                                     </h6>
                                 </div>
                                 <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
                                     <div class="card-body">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse quo sint repudiandae suscipit ab soluta delectus voluptate, vero vitae, tempore maxime rerum iste dolorem mollitia perferendis distinctio. Quibusdam laboriosam rerum distinctio. Repudiandae fugit odit, sequi id!</p>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae qui maxime consequatur laudantium temporibus ad et. A optio inventore deleniti ipsa.</p>
+                                        <li>{{single_product.spec_title}} <span>{{single_product.spec_description }}</span></li>
                                     </div>
                                 </div>
                             </div>

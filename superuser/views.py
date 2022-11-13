@@ -60,7 +60,7 @@ def admin_home(request):
     one_week = datetime.today() - timedelta(days=7)
     order_count_in_month = Order.objects.filter(created_at__year = year,created_at__month=month).count() 
     order_count_in_week = Order.objects.filter(created_at__gte = one_week).count()
-    order_count_in_today = Order.objects.filter(created_at__date= today).count()
+    order_count_in_today = Order.objects.filter(created_at__date = today).count()
     number_of_users = Account.objects.filter(is_admin= False).count()
 # users
     
@@ -451,7 +451,7 @@ def coupon_update(request, id) :
             messages.success(request,'Coupon Updated success fully ')
             return redirect(admin_display_coupon)    
     form = CouponForm(instance=category)
-    today_date=str(datetime.date.today())
+    today_date=str(datetime.date)
     context = {'form' : form,'today_date': today_date}
     return render(request, 'superuser/add-coupon.html', context)  
 

@@ -30,9 +30,9 @@
                                                     </span>
                                                     {% if user.profile_image %}
                                                     <img src="{{user.profile_image.url}}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
-                                                    {%else%}
-                                                    <img src="{% static 'img/user-image.jpg' %}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
-                                                    {%endif%}
+                                                    {% else %}
+                                                    <img src="{% static 'Timbre/img/user-image.jpg' %}" class="rounded-circle mb-3" style="width: 150px;" alt="Avatar" />
+                                                    {% endif%}
                                                 <h5 class="mb-2"><strong>{{user.full_name}}</strong></h5>
                                             </div>
                                         </div>

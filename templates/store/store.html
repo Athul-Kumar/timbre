@@ -67,7 +67,7 @@ store Page
                                 <div class="card-body">
                                      <!-- Product Image -->
                                     <div class="product-img">
-                                        <img src="{{items.pro_images.url}}" alt="" width="200px">
+                                       <a href='{{items.get_absolute_url}}'> <img src="{{items.pro_images.url}}" alt="" width="200px"></a>
                                         
                                     </div>
                                     {% if items.product_offer > 0 %}

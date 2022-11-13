@@ -11,6 +11,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
     description= models.TextField(max_length= 250, blank= True)
+    brand = models.CharField(max_length=255)
     rating= models.FloatField() 
     product_max_price= models.IntegerField()
     product_offer = models.IntegerField(default = 0)
