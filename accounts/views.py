@@ -20,7 +20,7 @@ from orders.models import Address
 from django.core.paginator import Paginator
 import requests
 
-# Create your views here.
+
 def user_register(request):
    
     if request.method=='POST':
@@ -30,7 +30,6 @@ def user_register(request):
             first_name = request.POST['first_name']
             last_name  = request.POST['last_name']
             email      = request.POST['email']
-            # gender     = request.POST['gender']
             mobile     = request.POST['mobile']
             password   = request.POST['password']
 
@@ -66,11 +65,11 @@ def user_login(request):
             user = Account.objects.get(email=email)
             
         except :
-            messages.error(request,"user Does not exist..")
+            messages.error(request,"User does not exist..")
         user = auth.authenticate(request,email=email,password=password)
         if user is not None:
             try:
-                print("entered")
+                print("User Exist")
                
                 cart = Cart.objects.get(cart_id = _cart_id(request))
                 is_cart_item_exists = Cartitem.objects.filter( cart_id=cart).exists()
